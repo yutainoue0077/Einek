@@ -107,7 +107,7 @@ Freude＜http://www2s.biglobe.ne.jp/~jim/freude/＞
 
 ---------
 ## 開発計画
-### 0.step   
+### step.0   
 web(Freude)から演奏会情報を引っ張り、homeに表示する。   
 
 ### step.1   
