@@ -1,6 +1,7 @@
 class ConcertsController < ApplicationController
   before_action :set_concert, only: [:show, :edit, :update, :destroy]
-
+  require "Nokogiri"
+  require "open-uri"
   # GET /concerts
   # GET /concerts.json
   def index
@@ -10,6 +11,17 @@ class ConcertsController < ApplicationController
   # GET /concerts/1
   # GET /concerts/1.json
   def show
+    url = "http://www2s.biglobe.ne.jp/~jim/freude/201410/masuo1410.html"
+    doc = Nokogiri.HTML(open(url))
+    item = Array.new(10)
+    doc.xpath('//blockquote/p').each_with_index do |node, i|
+      item[i] = node.text
+    end
+    @concert.name = item[0]
+    @concert.program = item[1]
+    @concert.stage = item[2]
+    @concert.map = item[3]
+    @concert.information = item[4]
   end
 
   # GET /concerts/new
