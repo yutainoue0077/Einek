@@ -34,10 +34,7 @@ class ConcertsController < ApplicationController
       content = content + node.text + "\n"
     end
     @concert.map = content
-    @concert.information = item[1]
-#doc.xpath('//tr/td/b').each_with_index do |node, i|
-#  item[i] = node.text
-#end
+    # @concert.information = item[1]
   end
 
   # GET /concerts/new
