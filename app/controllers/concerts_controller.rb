@@ -14,14 +14,19 @@ class ConcertsController < ApplicationController
     url = "http://www2s.biglobe.ne.jp/~jim/freude/201410/masuo1410.html"
     doc = Nokogiri.HTML(open(url))
     item = Array.new(10)
-    doc.xpath('//blockquote/p').each_with_index do |node, i|
-      item[i] = node.text
-    end
-    @concert.name = item[0]
-    @concert.program = item[1]
-    @concert.stage = item[2]
+
+    #演奏会タイトルの取得
+    main_title = doc.xpath('//tr/td/b').text.gsub("　", "") 
+    sub_title = doc.xpath('//tr/td/p/b').text.gsub("　", "")
+    full_title = "#{main_title}【#{sub_title}】"
+    @concert.name = main_title
+    @concert.program = sub_title
+    @concert.stage = full_title
     @concert.map = item[3]
     @concert.information = item[4]
+#doc.xpath('//tr/td/b').each_with_index do |node, i|
+#  item[i] = node.text
+#end
   end
 
   # GET /concerts/new
