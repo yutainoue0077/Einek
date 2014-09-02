@@ -15,15 +15,26 @@ class ConcertsController < ApplicationController
     doc = Nokogiri.HTML(open(url))
     item = Array.new(10)
 
-    #演奏会タイトルの取得
-    main_title = doc.xpath('//tr/td/b').text.gsub("　", "") 
+    # 演奏会タイトルの取得
+    main_title = doc.xpath('//tr/td/b').text.gsub("　", "")
     sub_title = doc.xpath('//tr/td/p/b').text.gsub("　", "")
     full_title = "#{main_title}【#{sub_title}】"
-    @concert.name = main_title
-    @concert.program = sub_title
-    @concert.stage = full_title
-    @concert.map = item[3]
-    @concert.information = item[4]
+    @concert.name = full_title
+
+    # 日時・場所・を取得
+    doc.xpath('//blockquote/p').each_with_index do |node, i|
+      item[i] = node.text
+    end
+    @concert.program = item[0]
+    @concert.stage = item[1]
+
+    # 演奏曲目を連結表示
+    content = ""
+    doc.xpath('//dd/b').each_with_index do |node, i|
+      content = content + node.text + "\n"
+    end
+    @concert.map = content
+    @concert.information = item[1]
 #doc.xpath('//tr/td/b').each_with_index do |node, i|
 #  item[i] = node.text
 #end

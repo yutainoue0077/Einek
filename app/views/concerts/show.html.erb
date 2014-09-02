@@ -17,13 +17,14 @@
 
 <p>
   <strong>Map:</strong>
-  <%= @concert.map %>
+  <pre><%= @concert.map %></pre>
 </p>
 
 <p>
   <strong>Information:</strong>
   <%= @concert.information %>
 </p>
+
 
 <%= link_to 'Edit', edit_concert_path(@concert) %> |
 <%= link_to 'Back', concerts_path %>
