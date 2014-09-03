@@ -40,6 +40,7 @@ gem 'spring',        group: :development
 
 
 gem 'nokogiri'
+gem 'selenium-webdriver'
 
 group :production do
   gem 'pg', '0.15.1'
