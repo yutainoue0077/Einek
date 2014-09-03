@@ -38,9 +38,12 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-
+# スクレイピング
 gem 'nokogiri'
 gem 'selenium-webdriver'
+
+# 検索用
+gem "ransack"
 
 group :production do
   gem 'pg', '0.15.1'

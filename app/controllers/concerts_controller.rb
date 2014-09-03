@@ -9,6 +9,7 @@ class ConcertsController < ApplicationController
   # GET /concerts.json
   def index
     @concerts = Concert.all
+    @accesss = Access.all
   end
 
 
@@ -46,13 +47,22 @@ class ConcertsController < ApplicationController
     doc.xpath('//dd/b').each_with_index do |node, i|
       content = content + node.text + "\n"
     end
-    @concert.map = content
+    @concert.content = content
 
-    # お問い合わせ先を表示
+    # お問い合わせ先を表示(編集前)
     itemxxx = driver.find_element(:xpath, '/html/body/center/table/tbody/tr[3]/td/center/p[2]/a').text
     @concert.information = itemxxx
     # @concert.information = item[1]
 
+    # 住所情報を表示
+     @access = Access.new
+    #@access = Access.find(1)
+     #@access = Access.where(["hall_name LIKE ?", '俺の実家'])
+
+    access_all = Access.search(:hall_name => "俺の実家").result
+    @access.hall_name = access_all[0].hall_name
+    @access.spot = access_all[0].spot
+    @access.train = access_all[0].train
     driver.quit
   end
 

@@ -25,6 +25,15 @@
         <td><%= link_to 'Destroy', concert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
+
+    <% @accesss.each do |access| %>
+      <tr>
+        <td><%= access.hall_name %></td>
+        <td><%= access.spot %></td>
+        <td><%= access.train %></td>
+
+      </tr>
+    <% end %>
   </tbody>
 </table>
 
