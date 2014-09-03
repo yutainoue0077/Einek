@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hall_name: MyString
+  spot: MyString
+  train: MyString
+
+two:
+  hall_name: MyString
+  spot: MyString
+  train: MyString

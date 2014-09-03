@@ -2,17 +2,30 @@ class ConcertsController < ApplicationController
   before_action :set_concert, only: [:show, :edit, :update, :destroy]
   require "Nokogiri"
   require "open-uri"
+  require 'selenium-webdriver'
+  require 'rubygems'
+
   # GET /concerts
   # GET /concerts.json
   def index
     @concerts = Concert.all
   end
 
+
+
+
+
+
+
+
   # GET /concerts/1
   # GET /concerts/1.json
   def show
-    url = "http://www2s.biglobe.ne.jp/~jim/freude/201410/masuo1410.html"
-    doc = Nokogiri.HTML(open(url))
+    driver = Selenium::WebDriver.for :safari
+    driver.navigate.to "http://www2s.biglobe.ne.jp/~jim/freude/201410/masuo1410.html"
+
+    html = driver.page_source
+    doc = Nokogiri.HTML(html)
     item = Array.new(10)
 
     # 演奏会タイトルの取得
@@ -34,8 +47,22 @@ class ConcertsController < ApplicationController
       content = content + node.text + "\n"
     end
     @concert.map = content
+
+    # お問い合わせ先を表示
+    itemxxx = driver.find_element(:xpath, '/html/body/center/table/tbody/tr[3]/td/center/p[2]/a').text
+    @concert.information = itemxxx
     # @concert.information = item[1]
+
+    driver.quit
   end
+
+
+
+
+
+
+
+
 
   # GET /concerts/new
   def new
