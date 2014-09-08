@@ -17,7 +17,9 @@ class ConcertsController < ApplicationController
   # GET /concerts/1.json
   def show
     driver = Selenium::WebDriver.for :safari
-    driver.navigate.to "http://www2s.biglobe.ne.jp/~jim/freude/201410/masuo1410.html"
+    driver.navigate.to "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014oct.html"
+    #driver.find_element(:xpath, '/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[1]').click
+    driver.find_element(:xpath, '/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[2]').click
 
     html = driver.page_source
     doc = Nokogiri.HTML(html)
@@ -36,9 +38,9 @@ class ConcertsController < ApplicationController
     @concert.program = item[0]
 
     #場所情報をホール名のみに変更
-    hall_short_name = item[1].split("　")
-    stage_name = hall_short_name[0].gsub("\n場所： ", "")
-    @concert.stage = stage_name
+    #hall_short_name = item[1].split("　")
+    #stage_name = hall_short_name[0].gsub("\n場所： ", "")
+    #@concert.stage = stage_name
 
     # 演奏曲目を連結表示
     content_all = ""
@@ -47,18 +49,24 @@ class ConcertsController < ApplicationController
     end
     @concert.content = content_all
 
-    # お問い合わせ先を表示(編集前)
+    # お問い合わせ先を表示
     @infomation = Infomation.new
-    info_all = Infomation.where("oke_name = '#{main_title}'")
-    @infomation.info = info_all[0].info
+    #info_all = Infomation.where("oke_name = '#{main_title}'")
+    #@infomation.info = info_all[0].info
 
 
     # 住所情報を表示
     @access = Access.new
-    access_all = Access.where("hall_name = '#{stage_name}'")
-    @access.hall_name = access_all[0].hall_name
-    @access.spot = access_all[0].spot
-    @access.train = access_all[0].train
+    #access_all = Access.where("hall_name = '#{stage_name}'")
+    #@access.hall_name = access_all[0].hall_name
+    #@access.spot = access_all[0].spot
+    #@access.train = access_all[0].train
+
+    # デバック用
+    @infomation.info = "aaa"
+    @access.hall_name = "aaa"
+    @access.spot = "aaa"
+    @access.train = "aaa"
 
     driver.quit
   end
