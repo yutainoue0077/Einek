@@ -13,12 +13,6 @@ class ConcertsController < ApplicationController
   end
 
 
-
-
-
-
-
-
   # GET /concerts/1
   # GET /concerts/1.json
   def show
@@ -40,29 +34,32 @@ class ConcertsController < ApplicationController
       item[i] = node.text
     end
     @concert.program = item[0]
-    @concert.stage = item[1]
+
+    #場所情報をホール名のみに変更
+    hall_short_name = item[1].split("　")
+    stage_name = hall_short_name[0].gsub("\n場所： ", "")
+    @concert.stage = stage_name
 
     # 演奏曲目を連結表示
-    content = ""
+    content_all = ""
     doc.xpath('//dd/b').each_with_index do |node, i|
-      content = content + node.text + "\n"
+      content_all = content_all + node.text + "\n"
     end
-    @concert.content = content
+    @concert.content = content_all
 
     # お問い合わせ先を表示(編集前)
-    itemxxx = driver.find_element(:xpath, '/html/body/center/table/tbody/tr[3]/td/center/p[2]/a').text
-    @concert.information = itemxxx
-    # @concert.information = item[1]
+    @infomation = Infomation.new
+    info_all = Infomation.where("oke_name = '#{main_title}'")
+    @infomation.info = info_all[0].info
+
 
     # 住所情報を表示
-     @access = Access.new
-    #@access = Access.find(1)
-     #@access = Access.where(["hall_name LIKE ?", '俺の実家'])
-
-    access_all = Access.search(:hall_name => "俺の実家").result
+    @access = Access.new
+    access_all = Access.where("hall_name = '#{stage_name}'")
     @access.hall_name = access_all[0].hall_name
     @access.spot = access_all[0].spot
     @access.train = access_all[0].train
+
     driver.quit
   end
 
