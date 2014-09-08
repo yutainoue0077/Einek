@@ -21,6 +21,7 @@ class ConcertsController < ApplicationController
     driver.find_element(:xpath,'/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[1]').click
     #driver.find_element(:xpath, '/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[2]').click
 
+
     html = driver.page_source
     doc = Nokogiri.HTML(html)
     item = Array.new(10)
