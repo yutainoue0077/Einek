@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @concert.name %>
+</p>
+
+<p>
+  <strong>Program:</strong>
+  <%= @concert.program %>
+</p>
+
+<p>
+  <strong>Stage:</strong>
+  <%= @concert.stage %>
+</p>
+
+<p>
+  <strong>content</strong>
+  <pre><%= @concert.content %></pre>
+</p>
+
+<p>
+  <strong>Information:</strong>
+  <%= @infomation.info %>
+</p>
+
+<p>
+  <strong>Access:</strong>
+  <%= @access.hall_name %><br>
+  <%= @access.spot %><br>
+  <%= @access.train %><br>
+</p>
+
+
+<%= link_to 'Edit', edit_concert_path(@concert) %> |
+<%= link_to 'Back', concerts_path %>

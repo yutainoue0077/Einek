@@ -1,0 +1,19 @@
+json.extract! @concert,
+                        :id,
+                        :name,
+                        :program,
+                        :stage,
+                        :map,
+                        :information,
+                        :created_at,
+                        :updated_at
+
+
+#json.extract! @access,
+#                        :hall_name,
+#                        :spot,
+#                        :train
+
+#json.extract! @infomation,
+#                        :oke_name,
+#                        :info
