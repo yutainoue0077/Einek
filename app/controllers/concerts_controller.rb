@@ -21,8 +21,8 @@ class ConcertsController < ApplicationController
 @concert = Concert.new
 agent = Mechanize.new
 page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014nov.html')
-link = page.links[25]
-@concert.program = link.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
+link = page.links.count
+@concert.program = link #.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
 
       driver = Selenium::WebDriver.for :safari
