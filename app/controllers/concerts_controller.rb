@@ -20,20 +20,21 @@ class ConcertsController < ApplicationController
   # GET /concerts/1.json
   def show
 
-    scrape_page_so = request.path_info.gsub("/concert/", "")
-    scrape_page = scrape_page_so.to_s.gsub("jan", "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html")
+    scrape_page_month = request.path_info.gsub("/concert/", "")
+    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
+    scrape_page_x = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
 
     #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
     agent = Mechanize.new
-    page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014dec.html')
+    page = agent.get(scrape_page_x)
     concert_links_count = page.links.count - 17
 
     #ほんとはconcert_links_countで回す
     concert_links_count.times do |i|
       @concert = Concert.new
-      page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014dec.html')
+      page = agent.get(scrape_page_x)
       link = page.links[i + 16]
-      link_url   = link.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
+      link_url   = link.href #.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
       page = agent.get(link_url)
       doc = Nokogiri::HTML(link_url)
@@ -96,7 +97,7 @@ class ConcertsController < ApplicationController
       @access = Access.new
       access_all = Access.where("hall_name = '#{stage_name}'")
       if access_all.empty?
-        @concert.map = "#{scrape_page}"
+        @concert.map = "なし"
         #@concert.information = "aaa"
         @access.train = "なし"
       else
@@ -114,6 +115,9 @@ class ConcertsController < ApplicationController
       #セーブする
       @concert.save
       #driver.quit
+
+      #タイトルに月えおあげたい
+      @access.train = scrape_page_month
     end
 
     @concerts = Concert.all

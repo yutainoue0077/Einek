@@ -1,28 +1,27 @@
-<h1>Listing concerts</h1>
+<h1>アイネク</h1>
+<h2>挟み込み情報サイト</h2>
 
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Program</th>
-      <th>Stage</th>
-      <th>Map</th>
-      <th>Information</th>
-      <th colspan="3"></th>
+      <title>アイネク</title>
     </tr>
   </thead>
 
   <tbody>
-    <td><%= link_to '1月', '' %></td>
-    <td><%= link_to '2月', '' %></td>
-    <td><%= link_to '3月', '' %></td>
-    <td><%= link_to '4月', '' %></td>
-    <td><%= link_to '5月', '' %></td>
-    <td><%= link_to '6月', '' %></td>
-    <td><%= link_to '7月', '' %></td>
+    <tr>
+      <td><%= link_to '1月', concert_jan_path %></td>
+      <td><%= link_to '2月', concert_feb_path %></td>
+      <td><%= link_to '3月', concert_mar_path %></td>
+      <td><%= link_to '4月', concert_apr_path %></td>
+      <td><%= link_to '5月', concert_may_path %></td>
+      <td><%= link_to '6月', concert_jun_path %></td>
+      <td><%= link_to '7月', concert_jul_path %></td>
+      <td><%= link_to '8月', concert_aug_path %></td>
+      <td><%= link_to '9月', concert_sep_path %></td>
+      <td><%= link_to '10月', concert_oct_path %></td>
+      <td><%= link_to '11月', concert_nov_path %></td>
+      <td><%= link_to '12月', concert_dec_path %></td>
+    </tr>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Concert', new_concert_path %>
