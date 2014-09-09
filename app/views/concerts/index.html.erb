@@ -31,7 +31,13 @@
         <td><%= access.hall_name %></td>
         <td><%= access.spot %></td>
         <td><%= access.train %></td>
+      </tr>
+    <% end %>
 
+    <% @infomation.each do |infomation| %>
+      <tr>
+        <td><%= infomation.oke_name %></td>
+        <td><%= infomation.info %></td>
       </tr>
     <% end %>
   </tbody>

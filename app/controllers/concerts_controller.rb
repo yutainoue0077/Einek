@@ -11,27 +11,31 @@ class ConcertsController < ApplicationController
   def index
     @concerts = Concert.all
     @accesss = Access.all
+    @infomation = Infomation.all
   end
 
 
   # GET /concerts/1
   # GET /concerts/1.json
   def show
-    1.times do |i|
-@concert = Concert.new
-agent = Mechanize.new
-page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014nov.html')
-link = page.links.count
-@concert.program = link #.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
+    #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
+    agent = Mechanize.new
+    page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014dec.html')
+    concert_links_count = page.links.count - 17
 
+    #ほんとはconcert_links_countで回す
+    3.times do |i|
+      @concert = Concert.new
+
+      link = page.links[i + 16]
+      link_url   = link.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude").to_s
+      #@concert.program = link_url
 
       driver = Selenium::WebDriver.for :safari
-      driver.navigate.to "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014oct.html"
-      driver.find_element(:xpath,  "/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[#{i + 1}]").click
-      #driver.find_element(:xpath, /html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[2]/td[2]/a[1]').click
-
-
+      driver.navigate.to link_url
+      #driver.find_element(:xpath,  "/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[1]").click
       html = driver.page_source
+
       doc = Nokogiri.HTML(html)
       item = Array.new(10)
 
@@ -53,16 +57,16 @@ link = page.links.count
 
       #sss = driver.find_elements(:class, //table[contains(@class, 'lin5')])
 
-      #if item_0.nil?
-      #  @concert.program = "なし"
-      #else
-      #  @concert.program = item[0]
-      #end
+      if item_0.nil?
+        @concert.program = "なし"
+      else
+        @concert.program = item[0]
+      end
 
       #場所情報をホール名のみに変更
-      #hall_short_name = item[1].split("　")
-      #stage_name = hall_short_name[0].gsub("\n場所： ", "")
-      #@concert.stage = stage_name
+      hall_short_name = item[1].split("　")
+      stage_name = hall_short_name[0].gsub("\n場所： ", "")
+      @concert.stage = item[1].to_s.gsub("\n場所： ", "")
 
       # 演奏曲目を連結表示
       content_all = ""
@@ -78,23 +82,35 @@ link = page.links.count
       @concert.save
       # お問い合わせ先を表示
       @infomation = Infomation.new
-      #info_all = Infomation.where("oke_name = '#{main_title}'")
-      #@infomation.info = info_all[0].info
+      info_all = Infomation.where("oke_name = '#{main_title}'")
+      if info_all.empty?
+        @concert.information = "aaa"
+      else
+        @concert.information = info_all[0].info
+      end
 
 
       # 住所情報を表示
       @access = Access.new
-      #access_all = Access.where("hall_name = '#{stage_name}'")
-      #@access.hall_name = access_all[0].hall_name
-      #@access.spot = access_all[0].spot
-      #@access.train = access_all[0].train
+      access_all = Access.where("hall_name = '#{stage_name}'")
+      if access_all.empty?
+        @concert.map = "aaa"
+        #@concert.information = "aaa"
+        @access.train = "aaa"
+      else
+        @concert.map = access_all[0].spot
+        #@concert.information = access_all[0].spot
+        @access.train = access_all[0].train
+      end
 
       # デバック用
       @infomation.info = "aaa"
-      @access.hall_name = "aaa"
-      @access.spot = "aaa"
-      @access.train = "aaa"
+      #@access.hall_name = "aaa"
+      #@access.spot = "aaa"
+      #@access.train = "aaa"
 
+      #セーブする
+      @concert.save
       driver.quit
     end
     @concerts = Concert.all
@@ -158,13 +174,13 @@ link = page.links.count
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_concert
-      @concert = Concert.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_concert
+    @concert = Concert.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def concert_params
-      params.require(:concert).permit(:name, :program, :stage, :map, :information)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def concert_params
+    params.require(:concert).permit(:name, :program, :stage, :map, :information)
+  end
 end
