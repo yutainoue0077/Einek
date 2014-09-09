@@ -1,9 +1,10 @@
 class ConcertsController < ApplicationController
   before_action :set_concert, only: [:show, :edit, :update, :destroy]
-  require "Nokogiri"
-  require "open-uri"
+  require 'Nokogiri'
+  require 'open-uri'
   require 'selenium-webdriver'
   require 'rubygems'
+  require 'mechanize'
 
   # GET /concerts
   # GET /concerts.json
@@ -16,9 +17,14 @@ class ConcertsController < ApplicationController
   # GET /concerts/1
   # GET /concerts/1.json
   def show
-    3.times do |i|
+    1.times do |i|
+@concert = Concert.new
+agent = Mechanize.new
+page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014nov.html')
+link = page.links[25]
+@concert.program = link.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
-      @concert = Concert.new
+
       driver = Selenium::WebDriver.for :safari
       driver.navigate.to "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014oct.html"
       driver.find_element(:xpath,  "/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[#{i + 1}]").click
@@ -33,7 +39,7 @@ class ConcertsController < ApplicationController
       main_title = doc.xpath('/html/body/center/table/tbody/tr[1]/td/b/font').text.gsub("　", "")
       sub_title = doc.xpath('/html/body/center/table/tbody/tr[1]/td/p/b/font').text.gsub("　", "")
       full_title = "#{main_title}【#{sub_title}】"
-      if full_title.empty?
+      if full_title.nil?
         @concert.name = "なし"
       else
         @concert.name = full_title
@@ -44,11 +50,14 @@ class ConcertsController < ApplicationController
         item[i] = node.text
       end
       item_0 = item[0]
-      if item_0.empty?
-        @concert.program = "なし"
-      else
-        @concert.program = item[0]
-      end
+
+      #sss = driver.find_elements(:class, //table[contains(@class, 'lin5')])
+
+      #if item_0.nil?
+      #  @concert.program = "なし"
+      #else
+      #  @concert.program = item[0]
+      #end
 
       #場所情報をホール名のみに変更
       #hall_short_name = item[1].split("　")
@@ -60,7 +69,7 @@ class ConcertsController < ApplicationController
       doc.xpath('//dd/b').each_with_index do |node, i|
         content_all = content_all + node.text + "\n"
       end
-      if content_all.empty?
+      if content_all.nil?
         @concert.content = "なし"
       else
         @concert.content = content_all

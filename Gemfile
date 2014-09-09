@@ -40,10 +40,15 @@ gem 'spring',        group: :development
 
 # スクレイピング
 gem 'nokogiri'
+
+# 仮想web操作
 gem 'selenium-webdriver'
 
 # 検索用
 gem "ransack"
+
+# webページ上のリンク取得
+gem 'mechanize'
 
 group :production do
   gem 'pg', '0.15.1'
