@@ -1,8 +1,8 @@
 class ConcertsController < ApplicationController
   before_action :set_concert, only: [:show, :edit, :update, :destroy]
-  require 'Nokogiri'
-  require 'open-uri'
-  require 'selenium-webdriver'
+  #require 'Nokogiri'
+  #require 'open-uri'
+  #require 'selenium-webdriver'
   require 'rubygems'
   require 'mechanize'
 
@@ -24,24 +24,26 @@ class ConcertsController < ApplicationController
     concert_links_count = page.links.count - 17
 
     #ほんとはconcert_links_countで回す
-    3.times do |i|
+    concert_links_count.times do |i|
       @concert = Concert.new
-
+      page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014dec.html')
       link = page.links[i + 16]
       link_url   = link.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude").to_s
       #@concert.program = link_url
 
-      driver = Selenium::WebDriver.for :safari
-      driver.navigate.to link_url
-      #driver.find_element(:xpath,  "/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[1]").click
-      html = driver.page_source
+      #driver = Selenium::WebDriver.for :safari
+      #driver.navigate.to link_url
+      ###driver.find_element(:xpath,  "/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[1]").click
+      #html = driver.page_source
 
-      doc = Nokogiri.HTML(html)
+      page = agent.get(link_url)
+      doc = Nokogiri::HTML(link_url)
       item = Array.new(10)
 
       # 演奏会タイトルの取得
-      main_title = doc.xpath('/html/body/center/table/tbody/tr[1]/td/b/font').text.gsub("　", "")
-      sub_title = doc.xpath('/html/body/center/table/tbody/tr[1]/td/p/b/font').text.gsub("　", "")
+      main_title = ""
+      main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "")
+      sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "")
       full_title = "#{main_title}【#{sub_title}】"
       if full_title.nil?
         @concert.name = "なし"
@@ -50,13 +52,10 @@ class ConcertsController < ApplicationController
       end
 
       # 日時・場所・を取得
-      doc.xpath('/html/body/center/table/tbody/tr[3]/td/blockquote/p').each_with_index do |node, i|
+      page.search('//tr[3]/td/blockquote/p').each_with_index do |node, i|
         item[i] = node.text
       end
       item_0 = item[0]
-
-      #sss = driver.find_elements(:class, //table[contains(@class, 'lin5')])
-
       if item_0.nil?
         @concert.program = "なし"
       else
@@ -70,7 +69,7 @@ class ConcertsController < ApplicationController
 
       # 演奏曲目を連結表示
       content_all = ""
-      doc.xpath('//dd/b').each_with_index do |node, i|
+      page.search('//dd/b').each_with_index do |node, i|
         content_all = content_all + node.text + "\n"
       end
       if content_all.nil?
@@ -84,7 +83,7 @@ class ConcertsController < ApplicationController
       @infomation = Infomation.new
       info_all = Infomation.where("oke_name = '#{main_title}'")
       if info_all.empty?
-        @concert.information = "aaa"
+        @concert.information = "なし"
       else
         @concert.information = info_all[0].info
       end
@@ -92,26 +91,26 @@ class ConcertsController < ApplicationController
 
       # 住所情報を表示
       @access = Access.new
-      access_all = Access.where("hall_name = '#{stage_name}'")
-      if access_all.empty?
-        @concert.map = "aaa"
-        #@concert.information = "aaa"
-        @access.train = "aaa"
-      else
-        @concert.map = access_all[0].spot
-        #@concert.information = access_all[0].spot
-        @access.train = access_all[0].train
-      end
+      ##access_all = Access.where("hall_name = '#{stage_name}'")
+      #if access_all.empty?
+      #  @concert.map = "なし"
+      #  #@concert.information = "aaa"
+      #  @access.train = "なし"
+      #else
+      #  @concert.map = access_all[0].spot
+      #  #@concert.information = access_all[0].spot
+      #  @access.train = access_all[0].train
+      #end
 
       # デバック用
-      @infomation.info = "aaa"
+      @infomation.info = "なし"
       #@access.hall_name = "aaa"
       #@access.spot = "aaa"
       #@access.train = "aaa"
 
       #セーブする
       @concert.save
-      driver.quit
+      #driver.quit
     end
     @concerts = Concert.all
   end
