@@ -1,4 +1,4 @@
-<h1>これでもshowページなんです。</h1>
+<h1><%= @access.train %></h1>
 
 <table>
   <thead>
@@ -12,6 +12,22 @@
     </tr>
   </thead>
 
+
+    <a><%= link_to '1月 ', concert_jan_path %></a>
+    <a><%= link_to '2月 ', concert_feb_path %></a>
+    <a><%= link_to '3月 ', concert_mar_path %></a>
+    <a><%= link_to '4月 ', concert_apr_path %></a>
+    <a><%= link_to '5月 ', concert_may_path %></a>
+    <a><%= link_to '6月 ', concert_jun_path %></a>
+    <a><%= link_to '7月 ', concert_jul_path %></a>
+    <a><%= link_to '8月 ', concert_aug_path %></a>
+    <a><%= link_to '9月 ', concert_sep_path %></a>
+    <a><%= link_to '10月 ', concert_oct_path %></a>
+    <a><%= link_to '11月 ', concert_nov_path %></a>
+    <a><%= link_to '12月 ', concert_dec_path %></a>
+    <a><%= link_to '一覧に戻る', concerts_path %></a>
+
+
   <tbody>
     <% @concerts.each do |concert| %>
       <tr>
@@ -21,16 +37,10 @@
         <td><%= concert.map %></td>
         <td><%= concert.information %></td>
         <td><%= concert.content %></td>
-        <td><%= link_to 'Show', concert %></td>
-        <td><%= link_to 'Edit', edit_concert_path(concert) %></td>
-        <td><%= link_to 'Destroy', concert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
-
-
   </tbody>
 </table>
 
 <br>
-<%= link_to 'Edit', edit_concert_path(@concert) %> |
-<%= link_to 'Back', concerts_path %>
+<%= link_to '一覧に戻る', concerts_path %>
