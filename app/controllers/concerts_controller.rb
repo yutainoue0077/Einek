@@ -1,5 +1,6 @@
 class ConcertsController < ApplicationController
-  before_action :set_concert, only: [:show, :edit, :update, :destroy]
+  before_action :set_concert, only: [:edit, :update, :destroy]
+  before_action :delete_concert, only: [:show]
   #require 'Nokogiri'
   #require 'open-uri'
   #require 'selenium-webdriver'
@@ -29,12 +30,6 @@ class ConcertsController < ApplicationController
       page = agent.get('http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014dec.html')
       link = page.links[i + 16]
       link_url   = link.href.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude").to_s
-      #@concert.program = link_url
-
-      #driver = Selenium::WebDriver.for :safari
-      #driver.navigate.to link_url
-      ###driver.find_element(:xpath,  "/html/body/center/table/tbody/tr/td[2]/table/tbody/tr[1]/td/table[2]/tbody/tr[5]/td[2]/a[1]").click
-      #html = driver.page_source
 
       page = agent.get(link_url)
       doc = Nokogiri::HTML(link_url)
@@ -65,7 +60,12 @@ class ConcertsController < ApplicationController
       #場所情報をホール名のみに変更
       hall_short_name = item[1].split("　")
       stage_name = hall_short_name[0].gsub("\n場所： ", "")
-      @concert.stage = item[1].to_s.gsub("\n場所： ", "")
+      stage_hull_name = item[1].to_s.gsub("\n場所： ", "")
+      if stage_hull_name.empty?
+        @concert.stage = 'なし'
+      else
+        @concert.stage = stage_hull_name
+      end
 
       # 演奏曲目を連結表示
       content_all = ""
@@ -78,7 +78,6 @@ class ConcertsController < ApplicationController
         @concert.content = content_all
       end
 
-      @concert.save
       # お問い合わせ先を表示
       @infomation = Infomation.new
       info_all = Infomation.where("oke_name = '#{main_title}'")
@@ -91,16 +90,16 @@ class ConcertsController < ApplicationController
 
       # 住所情報を表示
       @access = Access.new
-      ##access_all = Access.where("hall_name = '#{stage_name}'")
-      #if access_all.empty?
-      #  @concert.map = "なし"
-      #  #@concert.information = "aaa"
-      #  @access.train = "なし"
-      #else
-      #  @concert.map = access_all[0].spot
-      #  #@concert.information = access_all[0].spot
-      #  @access.train = access_all[0].train
-      #end
+      access_all = Access.where("hall_name = '#{stage_name}'")
+      if access_all.empty?
+        @concert.map = "なし"
+        #@concert.information = "aaa"
+        @access.train = "なし"
+      else
+        @concert.map = access_all[0].spot
+        #@concert.information = access_all[0].spot
+        @access.train = access_all[0].train
+      end
 
       # デバック用
       @infomation.info = "なし"
@@ -112,6 +111,7 @@ class ConcertsController < ApplicationController
       @concert.save
       #driver.quit
     end
+
     @concerts = Concert.all
   end
 
@@ -182,4 +182,9 @@ class ConcertsController < ApplicationController
   def concert_params
     params.require(:concert).permit(:name, :program, :stage, :map, :information)
   end
+
+  def delete_concert
+    Concert.delete_all
+  end
+
 end
