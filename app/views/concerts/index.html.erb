@@ -13,27 +13,13 @@
   </thead>
 
   <tbody>
-    <% @concerts.each do |concert| %>
+    <% 12.times do |i| %>
       <tr>
-        <td><%= concert.name %></td>
-        <td><%= concert.program %></td>
-        <td><%= concert.stage %></td>
-        <td><%= concert.map %></td>
-        <td><%= concert.information %></td>
-        <td><%= link_to 'Show', concert %></td>
-        <td><%= link_to 'Edit', edit_concert_path(concert) %></td>
-        <td><%= link_to 'Destroy', concert, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+        <td><%= "#{i + 1}月" %></td>
+        <td><%= link_to 'show', concert_path(i + 1) %></td>
+
     <% end %>
 
-    <% @accesss.each do |access| %>
-      <tr>
-        <td><%= access.hall_name %></td>
-        <td><%= access.spot %></td>
-        <td><%= access.train %></td>
-
-      </tr>
-    <% end %>
   </tbody>
 </table>
 
