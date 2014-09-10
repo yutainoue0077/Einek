@@ -21,7 +21,7 @@ class ConcertsController < ApplicationController
   def show
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
-    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
+    #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
     scrape_page_x = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
 
     #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
@@ -53,6 +53,7 @@ class ConcertsController < ApplicationController
 
       # 日時・場所・を取得
       page.search('//tr[3]/td/blockquote/p').each_with_index do |node, i|
+
         item[i] = node.text
       end
       item_0 = item[0]
@@ -63,13 +64,14 @@ class ConcertsController < ApplicationController
       end
 
       #場所情報をホール名のみに変更
-      hall_short_name = item[1].split("　")
+      item[1] = "読み込みエラー" if item[1].nil?
+      hall_short_name = item[1].gsub(" ", "　").gsub("大", "　").gsub("小", "　").gsub("シンフォニー", "　").split("　")
       stage_name = hall_short_name[0].gsub("\n場所： ", "")
       stage_hull_name = item[1].to_s.gsub("\n場所： ", "")
       if stage_hull_name.empty?
         @concert.stage = 'なし'
       else
-        @concert.stage = stage_hull_name
+        @concert.stage = item[1] #stage_hull_name
       end
 
       # 演奏曲目を連結表示
