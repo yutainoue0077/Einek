@@ -6,6 +6,8 @@ class ConcertsController < ApplicationController
   #require 'selenium-webdriver'
   require 'rubygems'
   require 'mechanize'
+  require 'spreadsheet'
+  require 'stringio'
 
   # GET /concerts
   # GET /concerts.json
@@ -16,8 +18,7 @@ class ConcertsController < ApplicationController
   end
 
 
-  # GET /concerts/1
-  # GET /concerts/1.json
+  # 一月分の演奏会を表示
   def show
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
@@ -133,9 +134,29 @@ class ConcertsController < ApplicationController
 
 
 
-  # GET /concerts/new
+  # Excelで出力
   def new
+    # 一応とっとく
     @concert = Concert.new
+
+    Spreadsheet.client_encoding = "UTF-8"
+
+    book = Spreadsheet.open "/Users/inoueyuuta/yuta/einek_2/Einek/app/assets/excel/concert.xls"
+    sheet1 = book.worksheet 0
+
+    # 処理書く
+
+    # 別名で保存（同じ名前にすると開けなくなるので注意）
+    data = StringIO.new
+    book.write data
+
+    send_data(
+      # tmpfile.read,
+      data.string,
+      #:disposition => 'attachment',
+      :type => 'application/excel',
+      :filename => 'test.xls'
+    )
   end
 
   # GET /concerts/1/edit
