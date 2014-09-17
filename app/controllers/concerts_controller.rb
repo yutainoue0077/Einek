@@ -30,7 +30,7 @@ class ConcertsController < ApplicationController
     concert_links_count = page.links.count - 17
 
     #ほんとはconcert_links_countで回す
-    concert_links_count.times do |i|
+    1.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i + 16]
