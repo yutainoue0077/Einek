@@ -6,6 +6,8 @@ class ConcertsController < ApplicationController
   #require 'selenium-webdriver'
   require 'rubygems'
   require 'mechanize'
+  require 'spreadsheet'
+  require 'stringio'
 
   # GET /concerts
   # GET /concerts.json
@@ -16,23 +18,22 @@ class ConcertsController < ApplicationController
   end
 
 
-  # GET /concerts/1
-  # GET /concerts/1.json
+  # 一月分の演奏会を表示
   def show
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
-    scrape_page_x = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
+    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
 
     #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
     agent = Mechanize.new
-    page = agent.get(scrape_page_x)
+    page = agent.get(scrape_page)
     concert_links_count = page.links.count - 17
 
     #ほんとはconcert_links_countで回す
     concert_links_count.times do |i|
       @concert = Concert.new
-      page = agent.get(scrape_page_x)
+      page = agent.get(scrape_page)
       link = page.links[i + 16]
       link_url   = link.href #.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
@@ -109,13 +110,14 @@ class ConcertsController < ApplicationController
       end
 
       # デバック用
-      @infomation.info = "なし"
+      @infomation.info = scrape_page_month
       #@access.hall_name = "aaa"
       #@access.spot = "aaa"
       #@access.train = "aaa"
 
       #セーブする
       @concert.save
+      @infomation.save
       #driver.quit
 
       #タイトルに月えおあげたい
@@ -133,9 +135,37 @@ class ConcertsController < ApplicationController
 
 
 
-  # GET /concerts/new
+  # Excelで出力(ユニークな楽団・ホール情報を取得するための仮処理)
+  # （本番環境では使用しない。）
   def new
-    @concert = Concert.new
+    # 一応とっとく########
+    #@concert = Concert.new
+    ######################
+    @infomation = Infomation.all
+    month_name = @infomation[0].info
+    @concerts = Concert.all
+
+    Spreadsheet.client_encoding = "UTF-8"
+
+    book = Spreadsheet.open "/Users/inoueyuuta/yuta/einek_2/Einek/app/assets/excel/concert.xls"
+    sheet1 = book.worksheet 0
+
+    # 処理書く
+    @concerts.each_with_index do |concert, i|
+      sheet1[i + 2, 1] = concert.name
+      sheet1[i + 2, 3] = concert.stage
+    end
+
+    data = StringIO.new
+    book.write data
+
+    send_data(
+      # tmpfile.read,
+      data.string,
+      #:disposition => 'attachment',
+      :type => 'application/excel',
+      :filename => "#{month_name}" + '【2014】.xls'
+    )
   end
 
   # GET /concerts/1/edit
