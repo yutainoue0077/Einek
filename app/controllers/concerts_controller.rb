@@ -150,7 +150,7 @@ class ConcertsController < ApplicationController
     book = Spreadsheet.open "/Users/inoueyuuta/yuta/einek_2/Einek/app/assets/excel/concert.xls"
     sheet1 = book.worksheet 0
 
-    # 処理書く
+    # 処理書く。
     @concerts.each_with_index do |concert, i|
       sheet1[i + 2, 1] = concert.name
       sheet1[i + 2, 3] = concert.stage
