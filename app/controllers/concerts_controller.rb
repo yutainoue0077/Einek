@@ -23,7 +23,7 @@ class ConcertsController < ApplicationController
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
-    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
+    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2013#{scrape_page_month}.html".to_s
 
     #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
     agent = Mechanize.new
@@ -59,8 +59,8 @@ class ConcertsController < ApplicationController
 
       # 演奏会タイトルの取得
       main_title = ""
-      main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "")
-      sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "")
+      main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "").gsub("'", "’")
+      sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "").gsub("'", "’")
       full_title = "#{main_title}【#{sub_title}】"
       if full_title.nil?
         @concert.name = "なし"
@@ -93,7 +93,7 @@ class ConcertsController < ApplicationController
       # 演奏曲目を連結表示
       content_all = ""
       page.search('//dd/b').each_with_index do |node, i|
-        content_all = content_all + node.text + "\n"
+        content_all = content_all + node.text.gsub("'", "’") + "\n"
       end
       if content_all.nil?
         @concert.content = "なし"
@@ -181,7 +181,7 @@ class ConcertsController < ApplicationController
       data.string,
       #:disposition => 'attachment',
       :type => 'application/excel',
-      :filename => "#{month_name}" + '【2014】.xls'
+      :filename => "#{month_name}" + '【2013】.xls'
     )
   end
 
