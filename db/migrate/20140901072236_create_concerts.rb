@@ -4,6 +4,8 @@ class CreateConcerts < ActiveRecord::Migration
       t.string :name
       t.string :program
       t.string :stage
+      t.string :month
+
       t.string :map
       t.string :address
       t.string :information
