@@ -31,7 +31,7 @@ class ConcertsController < ApplicationController
     concert_links_count = page.links.count - 17
 
     #ほんとはconcert_links_countで回す
-    concert_links_count.times do |i|
+    20.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i + 16]
@@ -54,14 +54,19 @@ class ConcertsController < ApplicationController
     end
   end
 
-      doc = Nokogiri::HTML(link_url)
+      #doc = Nokogiri::HTML(link_url)
       item = Array.new(10)
+
+      #演奏会情報でなければnext,演奏会情報ページにしか無いリンク場所を参照している。
+      if page.search('//tr[6]/td/center/a[2]').empty?
+        next
+      end
 
       # 演奏会タイトルの取得
       main_title = ""
       main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "").gsub("'", "’")
       sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "").gsub("'", "’")
-      full_title = "#{main_title}【#{sub_title}】"
+      full_title = main_title #"#{main_title}【#{sub_title}】"
       if full_title.nil?
         @concert.name = "なし"
       else
