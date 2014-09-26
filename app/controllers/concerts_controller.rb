@@ -23,29 +23,49 @@ class ConcertsController < ApplicationController
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
-    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
+    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2013#{scrape_page_month}.html".to_s
 
     #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
     agent = Mechanize.new
     page = agent.get(scrape_page)
-    concert_links_count = page.links.count - 17
 
-    #ほんとはconcert_links_countで回す
-    concert_links_count.times do |i|
+    #ほんとはpage.links.countで回す
+    page.links.count.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
-      link = page.links[i + 16]
+      link = page.links[i]
       link_url   = link.href #.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
+  begin
       page = agent.get(link_url)
-      doc = Nokogiri::HTML(link_url)
+      #エラーをレスキュー(あとでしっかりチェックしよ)
+    rescue Mechanize::ResponseCodeError => ex
+    case ex.response_code
+    when "404"
+      warn "#{ex.page.uri} is not found. skipping..."
+      next
+    when /\A5\d\d\Z/
+      warn "server error on #{ex.page.uri}"
+      break
+    else
+      warn "UNEXPECTED STATUS: #{ex.response_code} #{ex.page.uri}"
+      break
+    end
+  end
+
+      #doc = Nokogiri::HTML(link_url)
       item = Array.new(10)
+
+      #演奏会情報でなければnext,演奏会情報ページにしか無いリンク場所を参照している。
+      if page.search('//tr[6]/td/center/a[2]').empty?
+        next
+      end
 
       # 演奏会タイトルの取得
       main_title = ""
-      main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "")
-      sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "")
-      full_title = "#{main_title}【#{sub_title}】"
+      main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "").gsub("'", "’")
+      sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "").gsub("'", "’")
+      full_title = main_title #"#{main_title}【#{sub_title}】"
       if full_title.nil?
         @concert.name = "なし"
       else
@@ -54,31 +74,30 @@ class ConcertsController < ApplicationController
 
       # 日時・場所・を取得
       page.search('//tr[3]/td/blockquote/p').each_with_index do |node, i|
-
         item[i] = node.text
       end
-      item_0 = item[0]
-      if item_0.nil?
+
+      program = item[0]
+      if program.nil?
         @concert.program = "なし"
       else
-        @concert.program = item[0]
+        @concert.program = program
       end
 
       #場所情報をホール名のみに変更
       item[1] = "読み込みエラー" if item[1].nil?
-      hall_short_name = item[1].gsub(" ", "　").gsub("大", "　").gsub("小", "　").gsub("シンフォニー", "　").split("　")
-      stage_name = hall_short_name[0].gsub("\n場所： ", "")
+
       stage_hull_name = item[1].to_s.gsub("\n場所： ", "")
       if stage_hull_name.empty?
         @concert.stage = 'なし'
       else
-        @concert.stage = item[1] #stage_hull_name
+        @concert.stage = stage_hull_name
       end
 
       # 演奏曲目を連結表示
       content_all = ""
       page.search('//dd/b').each_with_index do |node, i|
-        content_all = content_all + node.text + "\n"
+        content_all = content_all + node.text.gsub("'", "’") + "\n"
       end
       if content_all.nil?
         @concert.content = "なし"
@@ -97,6 +116,9 @@ class ConcertsController < ApplicationController
 
 
       # 住所情報を表示
+      hall_short_name = item[1].gsub(" ", "　").gsub("大", "　").gsub("小", "　").gsub("シンフォニー", "　").split("　")
+      stage_name = hall_short_name[0].gsub("\n場所： ", "")
+
       @access = Access.new
       access_all = Access.where("hall_name = '#{stage_name}'")
       if access_all.empty?
@@ -110,14 +132,14 @@ class ConcertsController < ApplicationController
       end
 
       # デバック用
-      @infomation.info = scrape_page_month
+      @concert.month = scrape_page_month
       #@access.hall_name = "aaa"
       #@access.spot = "aaa"
       #@access.train = "aaa"
 
       #セーブする
       @concert.save
-      @infomation.save
+      #@infomation.save
       #driver.quit
 
       #タイトルに月えおあげたい
@@ -141,16 +163,15 @@ class ConcertsController < ApplicationController
     # 一応とっとく########
     #@concert = Concert.new
     ######################
-    @infomation = Infomation.all
-    month_name = @infomation[0].info
     @concerts = Concert.all
+    month_name = @concerts[0].month
 
     Spreadsheet.client_encoding = "UTF-8"
 
     book = Spreadsheet.open "/Users/inoueyuuta/yuta/einek_2/Einek/app/assets/excel/concert.xls"
     sheet1 = book.worksheet 0
 
-    # 処理書く
+    # 処理書く。
     @concerts.each_with_index do |concert, i|
       sheet1[i + 2, 1] = concert.name
       sheet1[i + 2, 3] = concert.stage
@@ -164,7 +185,7 @@ class ConcertsController < ApplicationController
       data.string,
       #:disposition => 'attachment',
       :type => 'application/excel',
-      :filename => "#{month_name}" + '【2014】.xls'
+      :filename => "#{month_name}" + '【2013】.xls'
     )
   end
 
