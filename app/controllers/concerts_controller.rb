@@ -28,13 +28,12 @@ class ConcertsController < ApplicationController
     #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
     agent = Mechanize.new
     page = agent.get(scrape_page)
-    concert_links_count = page.links.count - 17
 
-    #ほんとはconcert_links_countで回す
-    20.times do |i|
+    #ほんとはpage.links.countで回す
+    page.links.count.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
-      link = page.links[i + 16]
+      link = page.links[i]
       link_url   = link.href #.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
   begin
