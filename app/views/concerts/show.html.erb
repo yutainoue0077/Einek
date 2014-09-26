@@ -39,7 +39,7 @@
         <td><%= concert.program %></td>
         <td><%= concert.stage %></td>
         <td><%= concert.map %></td>
-        <td><%= concert.information %></td>
+        <td><%= link_to '楽団HP',  concert.information, :target=>["_blank"] %></td>
         <td><%= concert.content %></td>
         <td colspan="12"></td>
       </tr>
