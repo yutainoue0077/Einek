@@ -25,12 +25,11 @@ class ConcertsController < ApplicationController
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
     scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2013#{scrape_page_month}.html".to_s
 
-    #演奏会リンクは[16]から、16+1=17を総リンク数から引いた回数ループ
     agent = Mechanize.new
     page = agent.get(scrape_page)
 
     #ほんとはpage.links.countで回す
-    page.links.count.times do |i|
+    30.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i]
@@ -106,13 +105,17 @@ class ConcertsController < ApplicationController
       end
 
       # お問い合わせ先を表示
-      @infomation = Infomation.new
-      info_all = Infomation.where("oke_name = '#{main_title}'")
-      if info_all.empty?
-        @concert.information = "なし"
+      #@infomation = Infomation.new
+      if page.search("//tr[3]/td/center/p[1]/a").empty?
+        info = page.search("//tr[3]/td/center/a").attribute("href")
       else
-        @concert.information = info_all[0].info
+        info = page.search("//tr[3]/td/center/p[1]/a").attribute("href")
       end
+      #if info.empty?
+      #  @concert.information = 'なし'
+      #else
+        @concert.information = info.to_s
+      #end
 
 
       # 住所情報を表示
