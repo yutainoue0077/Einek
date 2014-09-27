@@ -23,7 +23,7 @@ class ConcertsController < ApplicationController
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
-    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2013#{scrape_page_month}.html".to_s
+    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
 
     agent = Mechanize.new
     page = agent.get(scrape_page)
@@ -83,7 +83,7 @@ class ConcertsController < ApplicationController
         @concert.program = program
       end
 
-      #場所情報をホール名のみに変更
+      #場所情報をホール名のみに変更して取得
       item[1] = "読み込みエラー" if item[1].nil?
 
       stage_hull_name = item[1].to_s.gsub("\n場所： ", "")
@@ -134,7 +134,7 @@ class ConcertsController < ApplicationController
         @access.train = access_all[0].train
       end
 
-      # デバック用
+      #
       @concert.month = scrape_page_month
       #@access.hall_name = "aaa"
       #@access.spot = "aaa"
@@ -145,8 +145,8 @@ class ConcertsController < ApplicationController
       #@infomation.save
       #driver.quit
 
-      #タイトルに月えおあげたい
-      @access.train = scrape_page_month
+      #タイトルに月の名前をあげたい
+      #@access.train = scrape_page_month
     end
 
     @concerts = Concert.all
@@ -170,14 +170,42 @@ class ConcertsController < ApplicationController
     month_name = @concerts[0].month
 
     Spreadsheet.client_encoding = "UTF-8"
+    #いままでは予め用意したスプレッドシート使ってた。
+    #book = Spreadsheet.open "/Users/inoueyuuta/yuta/einek_2/Einek/app/assets/excel/concert.xls"
+    #一から作ってみよう
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    #sheet.name = 'sheet1'
+    #sheet1 = book.worksheet 0
 
-    book = Spreadsheet.open "/Users/inoueyuuta/yuta/einek_2/Einek/app/assets/excel/concert.xls"
-    sheet1 = book.worksheet 0
+    #フォーマットを作る
+    #タイトルはセルを結合して表示したい、何月かも分かるように
+    #sheet1[0, 0] = "#{month_name}の挟み込みリスト"
 
-    # 処理書く。
+
+
+
+
+
+    sheet1[1, 5] = 'その他'
+
+    #演奏会情報を入力していく
     @concerts.each_with_index do |concert, i|
-      sheet1[i + 2, 1] = concert.name
-      sheet1[i + 2, 3] = concert.stage
+      i = i * 6
+
+      sheet1[i, 0] = '演奏会名'
+      sheet1[i, 1] = concert.name
+      sheet1[i + 1, 0] = '日程'
+      sheet1[i + 1, 1] = concert.program
+      sheet1[i + 2, 0] = '会場'
+      sheet1[i + 2, 1] = concert.stage
+      sheet1[i + 2, 3] = '最寄り駅'
+      sheet1[i + 2, 4] = concert.map
+      sheet1[i + 3, 0] = '担当者'
+      sheet1[i + 3, 1] = '' #ユーザーの自由記入欄
+      sheet1[i + 4, 0] = 'その他'
+      sheet1[i + 4, 1] = '' #ユーザーの自由記入欄
+
     end
 
     data = StringIO.new
@@ -188,7 +216,7 @@ class ConcertsController < ApplicationController
       data.string,
       #:disposition => 'attachment',
       :type => 'application/excel',
-      :filename => "#{month_name}" + '【2013】.xls'
+      :filename => "【2014年#{month_name}月】挟み込みリスト" + '.xls'
     )
   end
 
