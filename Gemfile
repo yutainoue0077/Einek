@@ -11,7 +11,7 @@ group :production do
 end
 group :development, :test do
   gem 'sqlite3'
-  gem 'sqlite3-ruby', :require => 'sqlite3'
+  #sgem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'rails_12factor', '0.0.2'
 end
 
