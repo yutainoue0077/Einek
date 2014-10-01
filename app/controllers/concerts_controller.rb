@@ -106,8 +106,12 @@ class ConcertsController < ApplicationController
 
       # お問い合わせ先を表示
       #@infomation = Infomation.new
-      if page.search("//tr[3]/td/center/p[1]/a").empty?
-        info = page.search("//tr[3]/td/center/a").attribute("href")
+      if page.search("//tr[3]/td/center/p[1]/a").blank?
+        if page.search("//tr[3]/td/center/a").blank?
+          info = ''
+        else
+          info = page.search("//tr[3]/td/center/a").attribute("href")
+        end
       else
         info = page.search("//tr[3]/td/center/p[1]/a").attribute("href")
       end
