@@ -18,7 +18,7 @@ class ConcertsController < ApplicationController
   end
 
 
-  # 一月分の演奏会を表示
+  # 一月分の演奏会を表示。
   def show
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
@@ -29,7 +29,7 @@ class ConcertsController < ApplicationController
     page = agent.get(scrape_page)
 
     #ほんとはpage.links.countで回す
-    30.times do |i|
+    page.links.count.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i]
