@@ -129,9 +129,9 @@ class ConcertsController < ApplicationController
       @access = Access.new
       access_all = Access.where("hall_name = '#{stage_name}'")
       if access_all.empty?
-        @concert.map = "なし"
+        @concert.map = "未登録"
         #@concert.information = "aaa"
-        @access.train = "なし"
+        @access.train = "未登録"
       else
         @concert.map = access_all[0].spot
         #@concert.information = access_all[0].spot
@@ -191,11 +191,11 @@ class ConcertsController < ApplicationController
 
 
 
-    sheet1[1, 5] = 'その他'
+    #sheet1[1, 5] = 'その他'
 
     #演奏会情報を入力していく
     @concerts.each_with_index do |concert, i|
-      i = i * 6
+      i = i * 7
 
       sheet1[i, 0] = '演奏会名'
       sheet1[i, 1] = concert.name
@@ -209,8 +209,8 @@ class ConcertsController < ApplicationController
       sheet1[i + 4, 1] = concert.information
       sheet1[i + 5, 0] = '担当者'
       sheet1[i + 5, 1] = '' #ユーザーの自由記入欄
-      sheet1[i + 6, 0] = '備考'
-      sheet1[i + 6, 1] = '' #ユーザーの自由記入欄
+      #sheet1[i + 6, 0] = '備考'
+      #sheet1[i + 6, 1] = '' #ユーザーの自由記入欄
 
     end
 
