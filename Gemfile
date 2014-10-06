@@ -8,11 +8,12 @@ gem 'rails', '4.1.4'
 #gem 'sqlite3', groups: :test, require: false
 group :production do
   gem 'pg'
+  gem 'rails_12factor', '0.0.2'
 end
 group :development, :test do
   gem 'sqlite3'
-  #sgem 'sqlite3-ruby', :require => 'sqlite3'
-  gem 'rails_12factor', '0.0.2'
+  #gem 'sqlite3-ruby', :require => 'sqlite3'
+
 end
 
 # Use SCSS for stylesheets

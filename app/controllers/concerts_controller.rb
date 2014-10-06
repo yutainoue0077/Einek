@@ -203,12 +203,14 @@ class ConcertsController < ApplicationController
       sheet1[i + 1, 1] = concert.program
       sheet1[i + 2, 0] = '会場'
       sheet1[i + 2, 1] = concert.stage
-      sheet1[i + 2, 3] = '最寄り駅'
-      sheet1[i + 2, 4] = concert.map
-      sheet1[i + 3, 0] = '担当者'
-      sheet1[i + 3, 1] = '' #ユーザーの自由記入欄
-      sheet1[i + 4, 0] = 'その他'
-      sheet1[i + 4, 1] = '' #ユーザーの自由記入欄
+      sheet1[i + 3, 0] = '最寄り駅'
+      sheet1[i + 3, 1] = ''
+      sheet1[i + 4, 0] = '楽団HP'
+      sheet1[i + 4, 1] = concert.information
+      sheet1[i + 5, 0] = '担当者'
+      sheet1[i + 5, 1] = '' #ユーザーの自由記入欄
+      sheet1[i + 6, 0] = '備考'
+      sheet1[i + 6, 1] = '' #ユーザーの自由記入欄
 
     end
 
