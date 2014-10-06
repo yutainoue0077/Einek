@@ -22,8 +22,8 @@ class ConcertsController < ApplicationController
   def show
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
-    #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s
-    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{scrape_page_month}.html".to_s
+    #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s#{scrape_page_month}
+    scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014oct.html".to_s
 
     agent = Mechanize.new
     page = agent.get(scrape_page)
