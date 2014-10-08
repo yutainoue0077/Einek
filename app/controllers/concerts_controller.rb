@@ -13,8 +13,8 @@ class ConcertsController < ApplicationController
   # GET /concerts.json
   def index
     @concerts = Concert.all
-    @accesss = Access.all
-    @infomation = Infomation.all
+    #@accesss = Access.all
+    #@infomation = Infomation.all
   end
 
 
@@ -52,9 +52,13 @@ class ConcertsController < ApplicationController
 
     @concerts = Concert.where(month: show_month)
 
-#Access.where("hall_name = '#{stage_name}'")
 
-
+    #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
+    #@access = Access.all
+    Access.destroy_all
+    @access = Access.new(id: 1)
+    @access.spot = show_month
+    @access.save
 
 
 
@@ -204,11 +208,48 @@ class ConcertsController < ApplicationController
   # Excelで出力(ユニークな楽団・ホール情報を取得するための仮処理)
   # （本番環境では使用しない。）
   def new
+
+    #表示する月を選ぶ
+    page_month = request.path_info.gsub("/concert/", "")
+
+    case page_month
+    when 'jan' then
+      show_month = 1
+    when 'feb' then
+      show_month = 2
+    when 'mar' then
+      show_month = 3
+    when 'apr' then
+      show_month = 4
+    when 'may' then
+      show_month = 5
+    when 'jun' then
+      show_month = 6
+    when 'jul' then
+      show_month = 7
+    when 'aug' then
+      show_month = 8
+    when 'sep' then
+      show_month = 9
+    when 'oct' then
+      show_month = 10
+    when 'nov' then
+      show_month = 11
+    when 'dec' then
+      show_month = 12
+    end
+######
+
+    @access = Access.find(1)
+    xxx = @access.spot
+    @concerts = Concert.where(month: xxx)
+
     # 一応とっとく########
     #@concert = Concert.new
     ######################
-    @concerts = Concert.all
-    month_name = @concerts[0].month
+    #@concerts = Concert.all
+    #month_name = @concerts[0].month
+    month_name = xxx
 
     Spreadsheet.client_encoding = "UTF-8"
     #いままでは予め用意したスプレッドシート使ってた。
