@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20140908022450) do
 
   create_table "accesses", force: true do |t|
     t.string   "hall_name"
-    t.string   "spot"
+    t.integer  "spot"
     t.string   "train"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -25,10 +25,11 @@ ActiveRecord::Schema.define(version: 20140908022450) do
     t.string   "name"
     t.string   "program"
     t.string   "stage"
-    t.string   "month"
+    t.integer  "month"
     t.string   "map"
     t.string   "address"
     t.string   "information"
+    t.integer  "page_month"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "content"
