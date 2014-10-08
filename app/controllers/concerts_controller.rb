@@ -21,7 +21,36 @@ class ConcertsController < ApplicationController
   # 一月分の演奏会を表示。
   def show
     #表示する月を選ぶ
-    @concerts = Concert.where(month: 1)
+    page_month = request.path_info.gsub("/concert/", "")
+
+    case page_month
+    when 'jan' then
+      show_month = 1
+    when 'feb' then
+      show_month = 2
+    when 'mar' then
+      show_month = 3
+    when 'apr' then
+      show_month = 4
+    when 'may' then
+      show_month = 5
+    when 'jun' then
+      show_month = 6
+    when 'jul' then
+      show_month = 7
+    when 'aug' then
+      show_month = 8
+    when 'sep' then
+      show_month = 9
+    when 'oct' then
+      show_month = 10
+    when 'nov' then
+      show_month = 11
+    when 'dec' then
+      show_month = 12
+    end
+
+    @concerts = Concert.where(month: show_month)
 
 #Access.where("hall_name = '#{stage_name}'")
 
