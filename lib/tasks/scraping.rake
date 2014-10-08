@@ -5,6 +5,9 @@ namespace :scraping do
   # :environment は モデルにアクセスするのに必須
   task :scrap => :environment do
 
+    #最初にDBを初期化
+    Concert.delete_all
+
     #scrape_page_month = request.path_info.gsub("/concert/", "")
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s#{scrape_page_month}
     scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014oct.html".to_s

@@ -1,6 +1,6 @@
 class ConcertsController < ApplicationController
   before_action :set_concert, only: [:edit, :update, :destroy]
-  before_action :delete_concert, only: [:show]
+  #before_action :delete_concert, only: [:show]
   #require 'Nokogiri'
   #require 'open-uri'
   #require 'selenium-webdriver'
@@ -29,7 +29,7 @@ class ConcertsController < ApplicationController
     page = agent.get(scrape_page)
 
     #ほんとはpage.links.countで回す
-    page.links.count.times do |i|
+    1.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i]
