@@ -39,8 +39,6 @@ namespace :scraping do
         month_name = 'dec'
       end
 
-      #scrape_page_month = request.path_info.gsub("/concert/", "")
-      #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s#{scrape_page_month}
       scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014#{month_name}.html".to_s
 
       agent = Mechanize.new
@@ -54,8 +52,8 @@ namespace :scraping do
         link_url   = link.href #.gsub("..", "http://www2s.biglobe.ne.jp/~jim/freude")
 
         begin
-            page = agent.get(link_url)
-            #エラーをレスキュー(あとでしっかりチェックしよ)
+          page = agent.get(link_url)
+          #エラーをレスキュー(あとでしっかりチェックしよ)
           rescue Mechanize::ResponseCodeError => ex
           case ex.response_code
           when "404"
@@ -70,7 +68,6 @@ namespace :scraping do
           end
         end
 
-        #doc = Nokogiri::HTML(link_url)
         item = Array.new(10)
 
         #演奏会情報でなければnext,演奏会情報ページにしか無いリンク場所を参照している。
@@ -123,7 +120,6 @@ namespace :scraping do
         end
 
         # お問い合わせ先を表示
-        #@infomation = Infomation.new
         if page.search("//tr[3]/td/center/p[1]/a").blank?
           if page.search("//tr[3]/td/center/a").blank?
             info = ''
@@ -133,12 +129,8 @@ namespace :scraping do
         else
           info = page.search("//tr[3]/td/center/p[1]/a").attribute("href")
         end
-        #if info.empty?
-        #  @concert.information = 'なし'
-        #else
-          @concert.information = info.to_s
-        #end
 
+        @concert.information = info.to_s
 
         # 住所情報を表示
         hall_short_name = item[1].gsub(" ", "　").gsub("大", "　").gsub("小", "　").gsub("シンフォニー", "　").split("　")
@@ -148,28 +140,18 @@ namespace :scraping do
         access_all = Access.where("hall_name = '#{stage_name}'")
         if access_all.empty?
           @concert.map = "未登録"
-          #@concert.information = "aaa"
           @access.train = "未登録"
         else
           @concert.map = access_all[0].spot
-          #@concert.information = access_all[0].spot
           @access.train = access_all[0].train
         end
 
         #何月の演奏会か判断するためのカラム
         @concert.month = month_now
 
-        #@access.hall_name = "aaa"
-        #@access.spot = "aaa"
-        #@access.train = "aaa"
-
         #セーブする
         @concert.save
-        #@infomation.save
-        #driver.quit
 
-        #タイトルに月の名前をあげたい
-        #@access.train = scrape_page_month
       end
     end
   end

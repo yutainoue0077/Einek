@@ -1,9 +1,5 @@
 class ConcertsController < ApplicationController
   before_action :set_concert, only: [:edit, :update, :destroy]
-  #before_action :delete_concert, only: [:show]
-  #require 'Nokogiri'
-  #require 'open-uri'
-  #require 'selenium-webdriver'
   require 'rubygems'
   require 'mechanize'
   require 'spreadsheet'
@@ -13,8 +9,6 @@ class ConcertsController < ApplicationController
   # GET /concerts.json
   def index
     @concerts = Concert.all
-    #@accesss = Access.all
-    #@infomation = Infomation.all
   end
 
 
@@ -53,7 +47,6 @@ class ConcertsController < ApplicationController
     @concerts = Concert.where(month: show_month)
 
     #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
-    #@access = Access.all
     Access.destroy_all
     @access = Access.new(id: 1)
     @access.spot = show_month
@@ -65,22 +58,19 @@ class ConcertsController < ApplicationController
   def new
 
     #表示する月を選ぶ
-
     @access = Access.find(1)
     xxx = @access.spot
     @concerts = Concert.where(month: xxx)
     month_name = xxx
 
-    Spreadsheet.client_encoding = "UTF-8"
-
     #excelファイルを作成
+    Spreadsheet.client_encoding = "UTF-8"
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
 
     #演奏会情報を入力していく
     @concerts.each_with_index do |concert, i|
       i = i * 8
-
       sheet1[i, 0] = '演奏会名'
       sheet1[i, 1] = concert.name
       sheet1[i + 1, 0] = '日程'
@@ -95,26 +85,17 @@ class ConcertsController < ApplicationController
       sheet1[i + 5, 1] = '' #ユーザーの自由記入欄
       sheet1[i + 6, 0] = '備考'
       sheet1[i + 6, 1] = '' #ユーザーの自由記入欄
-
     end
 
     data = StringIO.new
     book.write data
 
     send_data(
-      # tmpfile.read,
       data.string,
-      #:disposition => 'attachment',
       :type => 'application/excel',
       :filename => "【2014年#{month_name}月】挟み込みリスト" + '.xls'
     )
   end
-
-
-
-
-
-
 
 
   # GET /concerts/1/edit
