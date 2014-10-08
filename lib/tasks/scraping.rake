@@ -16,7 +16,7 @@ namespace :scraping do
     page = agent.get(scrape_page)
 
     #ほんとはpage.links.countで回す
-    40.times do |i|
+    page.links.count.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i]
