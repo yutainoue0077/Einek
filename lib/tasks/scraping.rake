@@ -9,7 +9,7 @@ namespace :scraping do
     Concert.delete_all
 
     #一年間（12ヶ月）全てをスクレイピングしたい
-    12.times do |x|
+    1.times do |x|
       month_now = x + 1
       #ｘを英語の月名に変換
       case month_now
@@ -156,8 +156,9 @@ namespace :scraping do
           @access.train = access_all[0].train
         end
 
-        #
-        @concert.month = ""
+        #何月の演奏会か判断するためのカラム
+        @concert.month = month_now
+
         #@access.hall_name = "aaa"
         #@access.spot = "aaa"
         #@access.train = "aaa"
