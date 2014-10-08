@@ -20,6 +20,14 @@ class ConcertsController < ApplicationController
 
   # 一月分の演奏会を表示。
   def show
+    #表示する月を選ぶ
+    @concerts = Concert.where(month: 1)
+
+#Access.where("hall_name = '#{stage_name}'")
+
+
+
+
 
     scrape_page_month = request.path_info.gsub("/concert/", "")
     #scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/2014jan.html".to_s#{scrape_page_month}
@@ -29,7 +37,7 @@ class ConcertsController < ApplicationController
     page = agent.get(scrape_page)
 
     #ほんとはpage.links.countで回す
-    1.times do |i|
+    0.times do |i|
       @concert = Concert.new
       page = agent.get(scrape_page)
       link = page.links[i]
@@ -153,7 +161,7 @@ class ConcertsController < ApplicationController
       #@access.train = scrape_page_month
     end
 
-    @concerts = Concert.all
+    #@concerts = Concert.all
   end
 
 
