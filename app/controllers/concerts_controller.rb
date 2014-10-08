@@ -58,7 +58,7 @@ class ConcertsController < ApplicationController
     @access = Access.new(id: 1)
     @access.spot = show_month
     @access.save
-
+    @access = Access.find(1)
   end
 
 

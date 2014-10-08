@@ -1,5 +1,6 @@
-
-<p><%= link_to "excel", new_concert_path %></p>
+<h1><%= "#{@access.spot}月の挟み込みリスト" %></h1>
+<h2><%= link_to "→　→　→【excelで保存する】←　←　←", new_concert_path %></h2>
+<p>　　　</p>
 <table class="table">
   <tr>
     <td><%= link_to '1月', concert_jan_path %></td>
@@ -35,7 +36,7 @@
   <tbody>
     <% @concerts.each do |concert| %>
       <tr>
-        <td><%= concert.month %></td>
+        <td><%= concert.name %></td>
         <td><%= concert.program %></td>
         <td><%= concert.stage %></td>
         <td><%= concert.map %></td>
