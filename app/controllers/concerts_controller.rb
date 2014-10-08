@@ -11,7 +11,6 @@ class ConcertsController < ApplicationController
     @concerts = Concert.all
   end
 
-
   # 一月分の演奏会を表示。
   def show
     #表示する月を選ぶ
