@@ -13,8 +13,9 @@ class ConcertsController < ApplicationController
 
   # 一月分の演奏会を表示。
   def show
-    #表示する月を選ぶ
+    #表示する年月を選ぶ
     page_month = request.path_info.gsub("/concert/", "")
+
 
     case page_month
     #2014
@@ -93,13 +94,13 @@ class ConcertsController < ApplicationController
       show_year = 2015
     end
 
-    @concerts = Concert.where(month: show_month,year: 2014)
+    @concerts = Concert.where(month: show_month,year: show_year)
 
     #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
     Access.destroy_all
     @access = Access.new(id: 1)
     @access.spot = show_month
-    @access.train = 2014
+    @access.train = show_year
     @access.save
     @access = Access.find(1)
   end
