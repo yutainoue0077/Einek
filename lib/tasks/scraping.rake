@@ -9,9 +9,10 @@ namespace :scraping do
     Concert.delete_all
 
     #2014,2015をスクレイピング
-    2.times do |y|
+    2.times do
+    year = 4
       #一年間（12ヶ月）全てをスクレイピングしたい
-      12.times do |x|
+      1.times do |x|
         month_now = x + 1
         #ｘを英語の月名に変換
         case month_now
@@ -41,7 +42,7 @@ namespace :scraping do
           month_name = 'dec'
         end
 
-        scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/201#{y}#{month_name}.html".to_s
+        scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/201#{year}#{month_name}.html".to_s
 
         agent = Mechanize.new
         page = agent.get(scrape_page)

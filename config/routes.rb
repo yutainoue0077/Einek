@@ -2,19 +2,31 @@ Rails.application.routes.draw do
   resources :concerts
   root "concerts#index"
 
-  get 'concert/jan' => 'concerts#show'
-  get 'concert/feb' => 'concerts#show'
-  get 'concert/mar' => 'concerts#show'
-  get 'concert/apr' => 'concerts#show'
-  get 'concert/may' => 'concerts#show'
-  get 'concert/jun' => 'concerts#show'
-  get 'concert/jul' => 'concerts#show'
-  get 'concert/aug' => 'concerts#show'
-  get 'concert/sep' => 'concerts#show'
-  get 'concert/oct' => 'concerts#show'
-  get 'concert/nov' => 'concerts#show'
-  get 'concert/dec' => 'concerts#show'
+  get 'concert/2014/jan' => 'concerts#show'
+  get 'concert/2014/feb' => 'concerts#show'
+  get 'concert/2014/mar' => 'concerts#show'
+  get 'concert/2014/apr' => 'concerts#show'
+  get 'concert/2014/may' => 'concerts#show'
+  get 'concert/2014/jun' => 'concerts#show'
+  get 'concert/2014/jul' => 'concerts#show'
+  get 'concert/2014/aug' => 'concerts#show'
+  get 'concert/2014/sep' => 'concerts#show'
+  get 'concert/2014/oct' => 'concerts#show'
+  get 'concert/2014/nov' => 'concerts#show'
+  get 'concert/2014/dec' => 'concerts#show'
 
+  get 'concert/2015/jan' => 'concerts#show'
+  get 'concert/2015/feb' => 'concerts#show'
+  get 'concert/2015/mar' => 'concerts#show'
+  get 'concert/2015/apr' => 'concerts#show'
+  get 'concert/2015/may' => 'concerts#show'
+  get 'concert/2015/jun' => 'concerts#show'
+  get 'concert/2015/jul' => 'concerts#show'
+  get 'concert/2015/aug' => 'concerts#show'
+  get 'concert/2015/sep' => 'concerts#show'
+  get 'concert/2015/oct' => 'concerts#show'
+  get 'concert/2015/nov' => 'concerts#show'
+  get 'concert/2015/dec' => 'concerts#show'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
