@@ -9,7 +9,7 @@ class CreateConcerts < ActiveRecord::Migration
       t.string :address
       t.string :information
       t.integer :page_month
-      t.integer :page_year
+      t.integer :year
 
       t.timestamps
     end

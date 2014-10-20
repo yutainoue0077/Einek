@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20140908022450) do
     t.string   "address"
     t.string   "information"
     t.integer  "page_month"
+    t.integer  "year"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "content"

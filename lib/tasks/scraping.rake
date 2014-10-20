@@ -9,7 +9,7 @@ namespace :scraping do
     Concert.delete_all
 
     #2014,2015をスクレイピング
-    year = 3
+    year = 2013
 
     2.times do
     year = year + 1
@@ -44,7 +44,7 @@ namespace :scraping do
           month_name = 'dec'
         end
 
-        scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/201#{year}#{month_name}.html".to_s
+        scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/#{year}#{month_name}.html".to_s
 
         agent = Mechanize.new
         page = agent.get(scrape_page)
