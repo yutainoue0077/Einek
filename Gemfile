@@ -67,5 +67,7 @@ gem 'twitter-bootstrap-rails'
 gem 'execjs'
 gem "therubyracer"
 
+gem 'bootstrap-sass'
+
 # Excel出力
 gem 'spreadsheet'
