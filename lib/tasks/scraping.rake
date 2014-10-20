@@ -9,10 +9,10 @@ namespace :scraping do
     Concert.delete_all
 
     #2014,2015をスクレイピング
-    scrap_year = 2013
+    start_year = 2013
 
     2.times do
-    scrap_year = scrap_year + 1
+    start_year = start_year + 1
       #一年間（12ヶ月）全てをスクレイピングしたい
       1.times do |x|
         month_now = x + 1
@@ -152,7 +152,7 @@ namespace :scraping do
           end
 
           #何時の演奏会か判断するためのカラム
-          @concert.year = scrap_year
+          @concert.year = start_year
           @concert.month = month_now
 
           #セーブする
