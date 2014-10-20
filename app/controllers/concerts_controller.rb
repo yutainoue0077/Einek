@@ -55,7 +55,7 @@ class ConcertsController < ApplicationController
       show_month = 12
       show_year = 2014
     #2015
-    when '2014/jan' then
+    when '2015/jan' then
       show_month = 1
       show_year = 2015
     when '2015/feb' then
@@ -93,7 +93,7 @@ class ConcertsController < ApplicationController
       show_year = 2015
     end
 
-    @concerts = Concert.where(month: show_month)
+    @concerts = Concert.where(month: show_month,year: 2014)
 
     #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
     Access.destroy_all
