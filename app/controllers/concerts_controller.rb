@@ -99,6 +99,7 @@ class ConcertsController < ApplicationController
     Access.destroy_all
     @access = Access.new(id: 1)
     @access.spot = show_month
+    @access.train = 2014
     @access.save
     @access = Access.find(1)
   end
