@@ -17,30 +17,80 @@ class ConcertsController < ApplicationController
     page_month = request.path_info.gsub("/concert/", "")
 
     case page_month
-    when 'jan' then
+    #2014
+    when '2014/jan' then
       show_month = 1
-    when 'feb' then
+      show_year = 2014
+    when '2014/feb' then
       show_month = 2
-    when 'mar' then
+      show_year = 2014
+    when '2014/mar' then
       show_month = 3
-    when 'apr' then
+      show_year = 2014
+    when '2014/apr' then
       show_month = 4
-    when 'may' then
+      show_year = 2014
+    when '2014/may' then
       show_month = 5
-    when 'jun' then
+      show_year = 2014
+    when '2014/jun' then
       show_month = 6
-    when 'jul' then
+      show_year = 2014
+    when '2014/jul' then
       show_month = 7
-    when 'aug' then
+      show_year = 2014
+    when '2014/aug' then
       show_month = 8
-    when 'sep' then
+      show_year = 2014
+    when '2014/sep' then
       show_month = 9
-    when 'oct' then
+      show_year = 2014
+    when '2014/oct' then
       show_month = 10
-    when 'nov' then
+      show_year = 2014
+    when '2014/nov' then
       show_month = 11
-    when 'dec' then
+      show_year = 2014
+    when '2014/dec' then
       show_month = 12
+      show_year = 2014
+    #2015
+    when '2014/jan' then
+      show_month = 1
+      show_year = 2015
+    when '2015/feb' then
+      show_month = 2
+      show_year = 2015
+    when '2015/mar' then
+      show_month = 3
+      show_year = 2015
+    when '2015/apr' then
+      show_month = 4
+      show_year = 2015
+    when '2015/may' then
+      show_month = 5
+      show_year = 2015
+    when '2015/jun' then
+      show_month = 6
+      show_year = 2015
+    when '2015/jul' then
+      show_month = 7
+      show_year = 2015
+    when '2015/aug' then
+      show_month = 8
+      show_year = 2015
+    when '2015/sep' then
+      show_month = 9
+      show_year = 2015
+    when '2015/oct' then
+      show_month = 10
+      show_year = 2015
+    when '2015/nov' then
+      show_month = 11
+      show_year = 2015
+    when '2015/dec' then
+      show_month = 12
+      show_year = 2015
     end
 
     @concerts = Concert.where(month: show_month)
