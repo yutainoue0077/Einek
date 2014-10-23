@@ -4,12 +4,16 @@ class CreateConcerts < ActiveRecord::Migration
       t.string :name
       t.string :program
       t.string :stage
+
+      t.integer :year
       t.integer :month
+      t.integer :day
+
       t.string :map
       t.string :address
       t.string :information
       t.integer :page_month
-      t.integer :year
+
 
       t.timestamps
     end

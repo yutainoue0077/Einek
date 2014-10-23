@@ -44,7 +44,7 @@ namespace :scraping do
           month_name = 'dec'
         end
 
-        scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/#{scrap_year}#{month_name}.html".to_s
+        scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/#{start_year}#{month_name}.html".to_s
 
         agent = Mechanize.new
         page = agent.get(scrape_page)

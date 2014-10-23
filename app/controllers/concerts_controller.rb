@@ -9,6 +9,9 @@ class ConcertsController < ApplicationController
   # GET /concerts.json
   def index
     @concerts = Concert.all
+    #ラジオボタンテスト
+    @concert = Concert.find(1)
+    #@concert.name = [:page][:area]
   end
 
   # 一月分の演奏会を表示。
