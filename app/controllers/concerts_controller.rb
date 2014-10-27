@@ -10,37 +10,37 @@ class ConcertsController < ApplicationController
   def index
     @concerts = Concert.all
     #ラジオボタンテスト
-    @concert = Concert.find(1)
+    #@concert = Concert.find(1)
     #@concert.name = [:page][:area]
   end
 
   # 一月分の演奏会を表示。
   def show
     #表示する年月を選ぶ
-    page_month = request.path_info.gsub("/concert/", "")
-
+    #page_month = request.path_info.gsub("/concert/", "")
+    page_month = params[:page][:area].to_i
 
     case page_month
     #2014
-    when '2014/jan' then
+    when 1 then
       show_month = 1
       show_year = 2014
-    when '2014/feb' then
+    when 2 then
       show_month = 2
       show_year = 2014
-    when '2014/mar' then
+    when 3 then
       show_month = 3
       show_year = 2014
-    when '2014/apr' then
+    when 4 then
       show_month = 4
       show_year = 2014
-    when '2014/may' then
+    when 5 then
       show_month = 5
       show_year = 2014
-    when '2014/jun' then
+    when 6 then
       show_month = 6
       show_year = 2014
-    when '2014/jul' then
+    when 7 then
       show_month = 7
       show_year = 2014
     when '2014/aug' then

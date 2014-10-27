@@ -14,7 +14,7 @@ namespace :scraping do
     2.times do
     start_year = start_year + 1
       #一年間（12ヶ月）全てをスクレイピングしたい
-      12.times do |x|
+      1.times do |x|
         month_now = x + 1
         #ｘを英語の月名に変換
         case month_now
@@ -154,7 +154,8 @@ namespace :scraping do
           #何時の演奏会か判断するためのカラム
           @concert.year = start_year
           @concert.month = month_now
-
+          concert_day = program[11 + month_now,2].gsub("日","").to_i
+          @concert.day = concert_day
           #セーブする
           @concert.save
 

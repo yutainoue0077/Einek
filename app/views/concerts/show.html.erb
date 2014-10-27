@@ -37,21 +37,6 @@
   </tr>
 </tbody>
 
-<%= form_tag({ :controller => 'concerts', :action => 'index' }, { :method => :get, :id => 'fm' }) do %>
-<p>
-東京<%= radio_button 'page', 'area', 'とうきょう', {} %>　
-大阪<%= radio_button 'page', 'area', 'おおさか', {}  %>　
-名古屋<%= radio_button 'page', 'area', 'なごや', {} %>　
-</p>
-<p>
-リンゴ<%= radio_button 'page', 'fruit', 'りんご', {} %>　
-ミカン<%= radio_button 'page', 'fruit', 'みかん', {}  %>　
-バナナ<%= radio_button 'page', 'fruit', 'ばなな', {} %>　
-ピーチ<%= radio_button 'page', 'fruit', 'ぴーち', {} %>　
-グレープ<%= radio_button 'page', 'fruit', 'ぐれーぷ', {} %>　
-</p>
-  <%= submit_tag '　送信する　' %>
-<% end %>
 
 <table class="table">
 
@@ -72,7 +57,7 @@
       <tr>
         <td><%= concert.name %></td>
         <td><%= concert.program %></td>
-        <td><%= concert.stage %></td>
+        <td><%= concert.day %></td>
         <td><%= concert.map %></td>
         <td><%= link_to '楽団HP',  concert.information, :target=>["_blank"] %></td>
         <td><%= concert.content %></td>
