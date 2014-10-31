@@ -38,6 +38,18 @@
 </tbody>
 
 
+<table>
+  <%= form_tag({ :controller => 'concerts', :action => 'show' }, { :method => :get, :id => 'fm' }) do %>
+  <p>2014年
+  全日<%= radio_button 'page', 'day', 0, {} %>
+  5日<%= radio_button 'page', 'day', 5, {} %>
+  11日<%= radio_button 'page', 'day', 11, {}  %>
+  12月<%= radio_button 'page', 'day', 12, {} %>
+  </p>
+    <%= submit_tag 'その日へGO！' %>
+  <% end %>
+</table>
+
 <table class="table">
 
   <thead>

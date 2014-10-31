@@ -3,7 +3,7 @@ namespace :scraping do
   desc "2013をスクレイピング"
 
   # :environment は モデルにアクセスするのに必須
-  task :scrap => :environment do
+    task :scrap => :environment do
 
     #最初にDBを初期化
     Concert.delete_all

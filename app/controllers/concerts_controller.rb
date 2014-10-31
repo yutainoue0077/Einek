@@ -16,96 +16,128 @@ class ConcertsController < ApplicationController
 
   # 一月分の演奏会を表示。
   def show
+
     #表示する年月を選ぶ
     #page_month = request.path_info.gsub("/concert/", "")
-    page_month = params[:page][:area].to_i
+    if params[:page][:area].blank?
+      @access = Access.find(1)
+      show_month = @access.spot
+      show_year = @access.train
+    else
+      page_month = params[:page][:area].to_i
 
-    case page_month
-    #2014
-    when 1 then
-      show_month = 1
-      show_year = 2014
-    when 2 then
-      show_month = 2
-      show_year = 2014
-    when 3 then
-      show_month = 3
-      show_year = 2014
-    when 4 then
-      show_month = 4
-      show_year = 2014
-    when 5 then
-      show_month = 5
-      show_year = 2014
-    when 6 then
-      show_month = 6
-      show_year = 2014
-    when 7 then
-      show_month = 7
-      show_year = 2014
-    when '2014/aug' then
-      show_month = 8
-      show_year = 2014
-    when '2014/sep' then
-      show_month = 9
-      show_year = 2014
-    when '2014/oct' then
-      show_month = 10
-      show_year = 2014
-    when '2014/nov' then
-      show_month = 11
-      show_year = 2014
-    when '2014/dec' then
-      show_month = 12
-      show_year = 2014
-    #2015
-    when '2015/jan' then
-      show_month = 1
-      show_year = 2015
-    when '2015/feb' then
-      show_month = 2
-      show_year = 2015
-    when '2015/mar' then
-      show_month = 3
-      show_year = 2015
-    when '2015/apr' then
-      show_month = 4
-      show_year = 2015
-    when '2015/may' then
-      show_month = 5
-      show_year = 2015
-    when '2015/jun' then
-      show_month = 6
-      show_year = 2015
-    when '2015/jul' then
-      show_month = 7
-      show_year = 2015
-    when '2015/aug' then
-      show_month = 8
-      show_year = 2015
-    when '2015/sep' then
-      show_month = 9
-      show_year = 2015
-    when '2015/oct' then
-      show_month = 10
-      show_year = 2015
-    when '2015/nov' then
-      show_month = 11
-      show_year = 2015
-    when '2015/dec' then
-      show_month = 12
-      show_year = 2015
+      ##月情報が保持出来ない！！！！##
+  # puts "hogehoge"
+  #     if page_month.blank?
+  #       show_month = @access.spot
+  #       show_year = @access.train
+  #       puts "nilnil"
+  #     end
+
+      case page_month
+      #2014
+      #when '2014/jan' then
+      when 1 then
+        show_month = 1
+        show_year = 2014
+      when '2014/feb' then
+        show_month = 2
+        show_year = 2014
+      when '2014/mar' then
+        show_month = 3
+        show_year = 2014
+      when '2014/apr' then
+        show_month = 4
+        show_year = 2014
+      when '2014/may' then
+        show_month = 5
+        show_year = 2014
+      when '2014/jun' then
+        show_month = 6
+        show_year = 2014
+      when '2014/jul' then
+        show_month = 7
+        show_year = 2014
+      when '2014/aug' then
+        show_month = 8
+        show_year = 2014
+      when '2014/sep' then
+        show_month = 9
+        show_year = 2014
+      when '2014/oct' then
+        show_month = 10
+        show_year = 2014
+      when '2014/nov' then
+        show_month = 11
+        show_year = 2014
+      when '2014/dec' then
+        show_month = 12
+        show_year = 2014
+      #2015
+      when '2015/jan' then
+        show_month = 1
+        show_year = 2015
+      when '2015/feb' then
+        show_month = 2
+        show_year = 2015
+      when '2015/mar' then
+        show_month = 3
+        show_year = 2015
+      when '2015/apr' then
+        show_month = 4
+        show_year = 2015
+      when '2015/may' then
+        show_month = 5
+        show_year = 2015
+      when '2015/jun' then
+        show_month = 6
+        show_year = 2015
+      when '2015/jul' then
+        show_month = 7
+        show_year = 2015
+      when '2015/aug' then
+        show_month = 8
+        show_year = 2015
+      when '2015/sep' then
+        show_month = 9
+        show_year = 2015
+      when '2015/oct' then
+        show_month = 10
+        show_year = 2015
+      when '2015/nov' then
+        show_month = 11
+        show_year = 2015
+      when '2015/dec' then
+        show_month = 12
+        show_year = 2015
+      end
     end
 
-    @concerts = Concert.where(month: show_month,year: show_year)
+    if params[:page][:day].to_i == 0
+      @concerts = Concert.where(month: show_month, year: show_year)
+    else
+      show_day = params[:page][:day].to_i
+      @concerts = Concert.where(month: show_month, year: show_year, day: show_day)
+    end
 
+    #日付検索をしても、月の値を保持
+#    if @access.nil?
+#    #else
+#      show_month = @access.spot
+#      show_year = @access.train
+#    end
     #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
-    Access.destroy_all
-    @access = Access.new(id: 1)
+    #Access.destroy_all
+    @access = Access.find(1)
+    #@access = Access.new(id: 1)
+    #@access = Access.update_all( "spot = #{show_month}", "train = #{show_year}" )
     @access.spot = show_month
     @access.train = show_year
-    @access.save
+    @access.save!
     @access = Access.find(1)
+
+
+
   end
 
 

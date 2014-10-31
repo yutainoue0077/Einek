@@ -28,6 +28,8 @@ Rails.application.routes.draw do
   get 'concert/2015/nov' => 'concerts#show'
   get 'concert/2015/dec' => 'concerts#show'
 
+  match "day", :controller => :concerts, :action => :show, :via => :get
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
