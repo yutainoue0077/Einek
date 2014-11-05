@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20140908022450) do
 
   create_table "accesses", force: true do |t|
-    t.string   "hall_name"
+    t.integer  "hall_name"
     t.integer  "spot"
     t.string   "train"
     t.datetime "created_at"

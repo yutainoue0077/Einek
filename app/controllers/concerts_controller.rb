@@ -128,16 +128,27 @@ class ConcertsController < ApplicationController
 #    end
     #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
     #Access.destroy_all
-    @access = Access.find(1)
+    # @access = Access.find(1)
+    # if @access.blank?
+      @access = Access.new
+    # else
+      # @access = Access.find(1)
+    # end
     #@access = Access.new(id: 1)
     #@access = Access.update_all( "spot = #{show_month}", "train = #{show_year}" )
+    show_month = 1
+    show_year = 2014
     @access.spot = show_month
     @access.train = show_year
+    #ユニークな日情報を渡したい
+    # uniq_day = []
+    # @concerts.each do |concert|
+    #   uniq_day.push(concert.day)
+    # end
+    # uniq_day.uniq
+    # @access.hall_name = uniq_day
     @access.save!
     @access = Access.find(1)
-
-
-
   end
 
 

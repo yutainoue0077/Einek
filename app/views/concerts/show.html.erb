@@ -42,9 +42,17 @@
   <%= form_tag({ :controller => 'concerts', :action => 'show' }, { :method => :get, :id => 'fm' }) do %>
   <p>2014年
   全日<%= radio_button 'page', 'day', 0, {} %>
-  5日<%= radio_button 'page', 'day', 5, {} %>
-  11日<%= radio_button 'page', 'day', 11, {}  %>
-  12月<%= radio_button 'page', 'day', 12, {} %>
+
+
+
+  <% day_uniq = 0 %>
+  <% @concerts.each do |concert| %>
+    <% if day_uniq != concert.day %>
+      <%= concert.day %><%= radio_button 'page', 'day', concert.day, {} %>
+    <% end %>
+    <% day_uniq = concert.day %>
+  <% end %>
+
   </p>
     <%= submit_tag 'その日へGO！' %>
   <% end %>
@@ -65,6 +73,7 @@
   </thead>
 
   <tbody>
+
     <% @concerts.each do |concert| %>
       <tr>
         <td><%= concert.name %></td>
