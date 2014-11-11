@@ -41,17 +41,29 @@
 <table>
   <%= form_tag({ :controller => 'concerts', :action => 'show' }, { :method => :get, :id => 'fm' }) do %>
   <p>2014年
-  全日<%= radio_button 'page', 'day', 0, {} %>
+  全日<%= radio_button 'show_page_day', 'day', 0, {} %>
 
 
 
   <% day_uniq = 0 %>
-  <% @concerts.each do |concert| %>
+  <% @concerts_day_all.each_with_index do |concert,i| %>
     <% if day_uniq != concert.day %>
-      <%= concert.day %><%= radio_button 'page', 'day', concert.day, {} %>
+      <%= concert.day %><%= radio_button 'show_page_day', 'day', concert.day, {} %>
     <% end %>
     <% day_uniq = concert.day %>
   <% end %>
+  ※日の検索は出来たが、問題がある。
+  ①ある日を選択して検索すると、その日と前日のみになっちゃう
+  →検索した文字からのみ探してるから？
+    @concertsの中身が検索内容のみになっちゃう
+  ②スクレイピングのエラーも気になる
+  →調査しよう
+  ③未選択でその日へGOを押すとエラー
+  →デフォルト値を作っておこうかな。
+  ④ラジオボタンやだ。
+  →link_toとか？のがいいかな？
+    とにかく操作工数を増やしたくない。
+
 
   </p>
     <%= submit_tag 'その日へGO！' %>

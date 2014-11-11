@@ -19,24 +19,16 @@ class ConcertsController < ApplicationController
 
     #表示する年月を選ぶ
     #page_month = request.path_info.gsub("/concert/", "")
-    if params[:page][:area].blank?
+    if params[:page].blank?
       @access = Access.find(1)
       show_month = @access.spot
       show_year = @access.train
     else
       page_month = params[:page][:area].to_i
 
-      ##月情報が保持出来ない！！！！##
-  # puts "hogehoge"
-  #     if page_month.blank?
-  #       show_month = @access.spot
-  #       show_year = @access.train
-  #       puts "nilnil"
-  #     end
-
       case page_month
-      #2014
-      #when '2014/jan' then
+        #2014
+        #when '2014/jan' then
       when 1 then
         show_month = 1
         show_year = 2014
@@ -73,7 +65,7 @@ class ConcertsController < ApplicationController
       when '2014/dec' then
         show_month = 12
         show_year = 2014
-      #2015
+        #2015
       when '2015/jan' then
         show_month = 1
         show_year = 2015
@@ -113,31 +105,60 @@ class ConcertsController < ApplicationController
       end
     end
 
-    if params[:page][:day].to_i == 0
+    # 日が複数選択されてたら、配列に入れたいなぁ
+    day_list = "ooo"
+    if params[:show_page_day].nil?
+    else
+      params[:show_page_day].each do |x|
+        day_list = day_list + params[:show_page_day][:day]
+        #  day_list = day_list + x.to_s
+      end
+    end
+
+
+    #でばっぐ
+    # show_month = 1
+    # show_year = 2014
+
+    # 日があったら日検索つける
+    if params[:show_page_day].nil?
+      day_count = 0
+    else
+      day_count = params[:show_page_day][:day].to_i
+    end
+
+    if day_count == 0
       @concerts = Concert.where(month: show_month, year: show_year)
     else
-      show_day = params[:page][:day].to_i
+      show_day = params[:show_page_day][:day]
       @concerts = Concert.where(month: show_month, year: show_year, day: show_day)
     end
 
+    #viewに全日のボタンを渡す
+    @concerts_day_all = Concert.where(month: show_month, year: show_year)
+
     #日付検索をしても、月の値を保持
-#    if @access.nil?
-#    #else
-#      show_month = @access.spot
-#      show_year = @access.train
-#    end
+    #    if @access.nil?
+    #    #else
+    #      show_month = @access.spot
+    #      show_year = @access.train
+    #    end
     #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
     #Access.destroy_all
-    # @access = Access.find(1)
+
+    # find(1)が存在しないとエラーになる問題も解決したい
+    @access = Access.find(1)
+
+
     # if @access.blank?
-      @access = Access.new
+    #  @access = Access.new
     # else
-      # @access = Access.find(1)
+    # @access = Access.find(1)
     # end
     #@access = Access.new(id: 1)
     #@access = Access.update_all( "spot = #{show_month}", "train = #{show_year}" )
-    show_month = 1
-    show_year = 2014
+    # show_month = 1
+    # show_year = 2014
     @access.spot = show_month
     @access.train = show_year
     #ユニークな日情報を渡したい
@@ -188,9 +209,9 @@ class ConcertsController < ApplicationController
     book.write data
 
     send_data(
-      data.string,
-      :type => 'application/excel',
-      :filename => "【2014年#{month_name}月】挟み込みリスト" + '.xls'
+    data.string,
+    :type => 'application/excel',
+    :filename => "【2014年#{month_name}月】挟み込みリスト" + '.xls'
     )
   end
 
