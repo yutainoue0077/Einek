@@ -71,3 +71,11 @@ gem 'bootstrap-sass'
 
 # Excel出力
 gem 'spreadsheet'
+
+# peek関連
+gem 'peek'
+gem 'peek-git'
+# gem 'peek-mysql2'
+gem 'peek-performance_bar'
+gem 'peek-rblineprof'
+gem 'pygments.rb', require: false # peek-rblineprof の syntax を highlight
