@@ -14,7 +14,7 @@ namespace :scraping do
     2.times do
     start_year = start_year + 1
       #一年間（12ヶ月）全てをスクレイピングしたい
-      1.times do |x|
+      12.times do |x|
         month_now = x + 1
         #ｘを英語の月名に変換
         case month_now
@@ -47,7 +47,24 @@ namespace :scraping do
         scrape_page = "http://www2s.biglobe.ne.jp/~jim/freude/calendar/#{start_year}#{month_name}.html".to_s
 
         agent = Mechanize.new
+
+        begin
         page = agent.get(scrape_page)
+
+        # その月ページがなかったらレスキュー
+        rescue Mechanize::ResponseCodeError => ex
+          case ex.response_code
+          when "404"
+            warn "#{ex.page.uri} is not found. skipping..."
+            next
+          when /\A5\d\d\Z/
+            warn "server error on #{ex.page.uri}"
+            break
+          else
+            warn "UNEXPECTED STATUS: #{ex.response_code} #{ex.page.uri}"
+            break
+          end
+        end
 
         #ほんとはpage.links.countで回す
         page.links.count.times do |i|
