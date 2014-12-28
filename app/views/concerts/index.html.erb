@@ -42,12 +42,4 @@
     </tr>
   </tbody>
 
-  <%= form_tag({ :controller => 'concerts', :action => 'show' }, { :method => :get, :id => 'fm' }) do %>
-  <p>2014年
-  1月<%= radio_button 'page', 'area', 1, {} %>
-  2月<%= radio_button 'page', 'area', 2, {}  %>
-  3月<%= radio_button 'page', 'area', 3, {} %>
-  </p>
-    <%= submit_tag 'その月へGO！' %>
-  <% end %>
 </table>

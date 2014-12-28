@@ -1,9 +1,9 @@
 namespace :scraping do
   # descの記述は必須
-  desc "2013をスクレイピング"
+  desc "2013-2014をスクレイピング"
 
   # :environment は モデルにアクセスするのに必須
-    task :scrap => :environment do
+  task :scrap => :environment do
 
     #最初にDBを初期化
     Concert.delete_all
@@ -12,7 +12,7 @@ namespace :scraping do
     start_year = 2013
 
     2.times do
-    start_year = start_year + 1
+      start_year = start_year + 1
       #一年間（12ヶ月）全てをスクレイピングしたい
       12.times do |x|
         month_now = x + 1
@@ -49,9 +49,9 @@ namespace :scraping do
         agent = Mechanize.new
 
         begin
-        page = agent.get(scrape_page)
+          page = agent.get(scrape_page)
 
-        # その月ページがなかったらレスキュー
+          # その月ページがなかったらレスキュー
         rescue Mechanize::ResponseCodeError => ex
           case ex.response_code
           when "404"
@@ -76,7 +76,7 @@ namespace :scraping do
           begin
             page = agent.get(link_url)
             #エラーをレスキュー(あとでしっかりチェックしよ)
-            rescue Mechanize::ResponseCodeError => ex
+          rescue Mechanize::ResponseCodeError => ex
             case ex.response_code
             when "404"
               warn "#{ex.page.uri} is not found. skipping..."
