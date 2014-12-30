@@ -11,10 +11,10 @@ namespace :scraping do
     #2014,2015をスクレイピング
     start_year = 2013
 
-    2.times do
+    1.times do
       start_year = start_year + 1
       #一年間（12ヶ月）全てをスクレイピングしたい
-      12.times do |x|
+      1.times do |x|
         month_now = x + 1
         #ｘを英語の月名に変換
         case month_now
@@ -131,9 +131,10 @@ namespace :scraping do
           end
 
           # 演奏曲目を連結表示
-          content_all = ""
+          content_all = []
+          # [TODO] - indexいらなくね？
           page.search('//dd/b').each_with_index do |node, i|
-            content_all = content_all + node.text.gsub("'", "’") + "\n"
+            content_all.push(node.text.gsub("'", "’"))
           end
           if content_all.nil?
             @concert.content = "なし"
@@ -142,14 +143,23 @@ namespace :scraping do
           end
 
           # お問い合わせ先を表示
-          if page.search("//tr[3]/td/center/p[1]/a").blank?
-            if page.search("//tr[3]/td/center/a").blank?
-              info = ''
+          begin
+            if page.search("//tr[3]/td/center/p[1]/a").blank?
+              # if page.search("//tr[3]/td/center/a").blank?
+                # info = ''
+              # else
+              info = page.search("//tr[3]/td/center/a").attribute("href").text
+              # end
             else
-              info = page.search("//tr[3]/td/center/a").attribute("href")
+              info = page.search("//tr[3]/td/center/p[1]/a").attribute("href").text
             end
-          else
-            info = page.search("//tr[3]/td/center/p[1]/a").attribute("href")
+          rescue
+            info = ''
+          end
+
+          # リンク切れはエラーと一緒に扱う
+          if info == 'http://'
+            info = ''
           end
 
           @concert.information = info.to_s
