@@ -61,7 +61,7 @@
         <td><%= concert.map %></td>
         <td>
           <% unless concert.information.empty? %>
-          <li><%= link_to '楽団HP',  concert.information, :target=>["_blank"] %></li>
+          <%= link_to '楽団HP',  concert.information, :target=>["_blank"] %>
           <% end %>
         </td>
         <td>
