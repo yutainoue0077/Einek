@@ -59,8 +59,18 @@
         <td><%= concert.program %></td>
         <td><%= concert.day %></td>
         <td><%= concert.map %></td>
-        <td><%= link_to '楽団HP',  concert.information, :target=>["_blank"] %></td>
-        <td><%= concert.content %></td>
+        <td>
+          <% unless concert.information.empty? %>
+          <li><%= link_to '楽団HP',  concert.information, :target=>["_blank"] %></li>
+          <% end %>
+        </td>
+        <td>
+          <ol>
+            <% concert.content.each do |concert_list| %>
+            <li><%= concert_list %></li>
+            <% end %>
+          </ol>
+        </td>
         <td colspan="12"></td>
       </tr>
     <% end %>

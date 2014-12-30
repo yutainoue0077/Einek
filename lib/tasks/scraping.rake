@@ -133,7 +133,7 @@ namespace :scraping do
           # 演奏曲目を連結表示
           content_all = []
           # [TODO] - indexいらなくね？
-          page.search('//dd/b').each_with_index do |node, i|
+          page.search('//dd/b').each do |node|
             content_all.push(node.text.gsub("'", "’"))
           end
           if content_all.nil?
