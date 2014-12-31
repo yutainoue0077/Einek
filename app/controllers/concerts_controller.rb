@@ -16,103 +16,12 @@ class ConcertsController < ApplicationController
 
   # 一月分の演奏会を表示。
   def show
-
     #表示する年月を選ぶ
-    page_month = request.path_info.gsub("/concert/", "")
-    # if params[:page].blank?
-    #   @access = Access.find(1)
-    #   show_month = @access.spot
-    #   show_year = @access.train
-    # else
-    #   page_month = params[:page][:area].to_i
-
-      case page_month
-        #2014
-      when '2014/jan' then
-        show_month = 1
-        show_year = 2014
-      when '2014/feb' then
-        show_month = 2
-        show_year = 2014
-      when '2014/mar' then
-        show_month = 3
-        show_year = 2014
-      when '2014/apr' then
-        show_month = 4
-        show_year = 2014
-      when '2014/may' then
-        show_month = 5
-        show_year = 2014
-      when '2014/jun' then
-        show_month = 6
-        show_year = 2014
-      when '2014/jul' then
-        show_month = 7
-        show_year = 2014
-      when '2014/aug' then
-        show_month = 8
-        show_year = 2014
-      when '2014/sep' then
-        show_month = 9
-        show_year = 2014
-      when '2014/oct' then
-        show_month = 10
-        show_year = 2014
-      when '2014/nov' then
-        show_month = 11
-        show_year = 2014
-      when '2014/dec' then
-        show_month = 12
-        show_year = 2014
-        #2015
-      when '2015/jan' then
-        show_month = 1
-        show_year = 2015
-      when '2015/feb' then
-        show_month = 2
-        show_year = 2015
-      when '2015/mar' then
-        show_month = 3
-        show_year = 2015
-      when '2015/apr' then
-        show_month = 4
-        show_year = 2015
-      when '2015/may' then
-        show_month = 5
-        show_year = 2015
-      when '2015/jun' then
-        show_month = 6
-        show_year = 2015
-      when '2015/jul' then
-        show_month = 7
-        show_year = 2015
-      when '2015/aug' then
-        show_month = 8
-        show_year = 2015
-      when '2015/sep' then
-        show_month = 9
-        show_year = 2015
-      when '2015/oct' then
-        show_month = 10
-        show_year = 2015
-      when '2015/nov' then
-        show_month = 11
-        show_year = 2015
-      when '2015/dec' then
-        show_month = 12
-        show_year = 2015
-      end
-    # end
+    page_month = request.path_info.gsub("/concert/", "").split("/")
+    show_year  = page_month[0]
+    show_month = page_month[1]
 
     @concerts = Concert.where(month: show_month, year: show_year)
-
-    #このページが何月か保持しておく（newでurlが変わらないのでlink_toで値が渡せないため）
-    Access.destroy_all
-    @access = Access.new(id: 1)
-    @access.spot = show_month
-    @access.train = show_year
-    @access.save
-    @access = Access.find(1)
   end
 
 

@@ -98,6 +98,7 @@ namespace :scraping do
           end
 
           # 演奏会タイトルの取得
+          # [TODO] - ここもmain,subで二段表示
           main_title = ""
           main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "").gsub("'", "’")
           sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "").gsub("'", "’")
@@ -109,6 +110,7 @@ namespace :scraping do
           end
 
           # 日時・場所・を取得
+          # [TODO] - ここも配列で取得して、リスト表示にしたい
           page.search('//tr[3]/td/blockquote/p').each_with_index do |node, i|
             item[i] = node.text
           end
@@ -165,18 +167,17 @@ namespace :scraping do
           @concert.information = info.to_s
 
           # 住所情報を表示
-          hall_short_name = item[1].gsub(" ", "　").gsub("大", "　").gsub("小", "　").gsub("シンフォニー", "　").split("　")
-          stage_name = hall_short_name[0].gsub("\n場所： ", "")
+          hall_short_name = stage_hull_name.gsub(/ |大|小|シンフォニー|ホール|（/," " => "","大" => "","小" => "","中" => "" ,"シンフォニー" => "", "ホール" => "　", "（" => "　").split("　")
 
-          @access = Access.new
-          access_all = Access.where("hall_name = '#{stage_name}'")
-          if access_all.empty?
-            @concert.map = "未登録"
-            @access.train = "未登録"
-          else
-            @concert.map = access_all[0].spot
-            @access.train = access_all[0].train
+      #    @access = Access.new
+      # [TODO] - べた書きだとうまく行くのに、変数で書くとnil???????
+          hall_station = Access.where("hall_name like '%" + "#{hall_short_name[0]}" + "%'")
+
+          hall_station.each do |this_hall_station|
+            @concert.station = this_hall_station.station
           end
+
+          @concert.stage = hall_short_name[0]
 
           #何時の演奏会か判断するためのカラム
           @concert.year = start_year

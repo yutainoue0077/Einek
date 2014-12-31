@@ -79,3 +79,16 @@ gem 'peek-git'
 gem 'peek-performance_bar'
 gem 'peek-rblineprof'
 gem 'pygments.rb', require: false # peek-rblineprof の syntax を highlight
+
+group :development do
+  # 高機能コンソール
+  gem 'pry-rails'
+
+  # デバッガー
+  gem 'pry-byebug'
+  gem 'pry-stack_explorer'
+
+  # PryでのSQLの結果を綺麗に表示
+  gem 'hirb'
+  gem 'hirb-unicode'
+end

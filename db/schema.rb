@@ -14,9 +14,8 @@
 ActiveRecord::Schema.define(version: 20140908022450) do
 
   create_table "accesses", force: true do |t|
-    t.integer  "hall_name"
-    t.integer  "spot"
-    t.string   "train"
+    t.string   "hall_name"
+    t.string   "station"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -32,9 +31,10 @@ ActiveRecord::Schema.define(version: 20140908022450) do
     t.string   "address"
     t.string   "information"
     t.integer  "page_month"
+    t.string   "station"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "content"
+    t.text     "content"
   end
 
   create_table "infomations", force: true do |t|
