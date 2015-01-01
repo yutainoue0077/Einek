@@ -17,9 +17,6 @@
     <td><%= link_to '11月', concert_2014_11_path %></td>
     <td><%= link_to '12月', concert_2014_12_path %></td>
   </tr>
-</tbody>
-
-<tbody>
   <tr>
     <td>2015</td>
     <td><%= link_to '1月', concert_2015_1_path %></td>
@@ -35,8 +32,15 @@
     <td><%= link_to '11月', concert_2015_11_path %></td>
     <td><%= link_to '12月', concert_2015_12_path %></td>
   </tr>
-</tbody>
+</table>
 
+
+
+<% 31.times do |x_day| %>
+
+<% today_concert = Concert.where(day: x_day) %>
+<% next if today_concert.blank? %>
+<h1><%= x_day %>日</h1>
 <table class="table">
 
   <thead>
@@ -53,10 +57,22 @@
 
   <tbody>
 
-    <% @concerts.each do |concert| %>
+    <% today_concert.each do |concert| %>
       <tr>
-        <td><%= concert.name %></td>
-        <td><%= concert.program %></td>
+        <td>
+          <ul style="list-style:none;">
+            <% concert.name.each do |name_list| %>
+            <li><%= name_list %></li>
+            <% end %>
+          </ul>
+        </td>
+        <td>
+          <ul style="list-style:none;">
+            <% concert.program.each do |program_list| %>
+            <li><%= program_list %></li>
+            <% end %>
+          </ul>
+        </td>
         <td><%= concert.stage %></td>
         <td><%= concert.station %></td>
         <td>
@@ -76,6 +92,8 @@
     <% end %>
   </tbody>
 </table>
+
+<% end %>
 
 <br>
 <p><%= link_to '戻る', concerts_path %></p>

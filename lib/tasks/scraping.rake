@@ -98,33 +98,28 @@ namespace :scraping do
           end
 
           # 演奏会タイトルの取得
-          # [TODO] - ここもmain,subで二段表示
-          main_title = ""
+          full_title = []
           main_title = page.search('//tr[1]/td/b/font').text.gsub("　", "").gsub("'", "’")
           sub_title = page.search('//tr[1]/td/p/b/font').text.gsub("　", "").gsub("'", "’")
-          full_title = main_title #"#{main_title}【#{sub_title}】"
-          if full_title.nil?
-            @concert.name = "なし"
-          else
-            @concert.name = full_title
-          end
+          full_title.push(main_title)
+          full_title.push("【#{sub_title}】")
+          @concert.name = full_title
 
           # 日時・場所・を取得
-          # [TODO] - ここも配列で取得して、リスト表示にしたい
           page.search('//tr[3]/td/blockquote/p').each_with_index do |node, i|
             item[i] = node.text
           end
+          program = []
+          program_all_data = item[0].gsub(/ |日時：| |（|）/ ,"日時：" => "", " " => "", "（" => "(", "）" => ")").gsub(")",")　").gsub("演","演　").gsub("年","年　").split("　")
 
-          program = item[0]
           if program.nil?
             @concert.program = "なし"
           else
-            @concert.program = program
+            @concert.program = program_all_data[1..3]
           end
 
           #場所情報をホール名のみに変更して取得
           item[1] = "読み込みエラー" if item[1].nil?
-
           stage_hull_name = item[1].to_s.gsub("\n場所： ", "")
           if stage_hull_name.empty?
             @concert.stage = 'なし'
@@ -134,7 +129,6 @@ namespace :scraping do
 
           # 演奏曲目を連結表示
           content_all = []
-          # [TODO] - indexいらなくね？
           page.search('//dd/b').each do |node|
             content_all.push(node.text.gsub("'", "’"))
           end
@@ -147,11 +141,7 @@ namespace :scraping do
           # お問い合わせ先を表示
           begin
             if page.search("//tr[3]/td/center/p[1]/a").blank?
-              # if page.search("//tr[3]/td/center/a").blank?
-                # info = ''
-              # else
               info = page.search("//tr[3]/td/center/a").attribute("href").text
-              # end
             else
               info = page.search("//tr[3]/td/center/p[1]/a").attribute("href").text
             end
@@ -169,21 +159,17 @@ namespace :scraping do
           # 住所情報を表示
           hall_short_name = stage_hull_name.gsub(/ |大|小|シンフォニー|ホール|（/," " => "","大" => "","小" => "","中" => "" ,"シンフォニー" => "", "ホール" => "　", "（" => "　").split("　")
 
-      #    @access = Access.new
-      # [TODO] - べた書きだとうまく行くのに、変数で書くとnil???????
           hall_station = Access.where("hall_name like '%" + "#{hall_short_name[0]}" + "%'")
-
           hall_station.each do |this_hall_station|
             @concert.station = this_hall_station.station
           end
 
-          @concert.stage = hall_short_name[0]
-
           #何時の演奏会か判断するためのカラム
           @concert.year = start_year
           @concert.month = month_now
-          concert_day = program[11 + month_now,2].gsub("日","").to_i
-          @concert.day = concert_day
+          concert_day = program_all_data[1].gsub(/ |月|日/, "月" => "　", "日" => "　").split("　")
+          @concert.day = concert_day[1]
+
           #セーブする
           @concert.save
 
