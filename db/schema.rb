@@ -21,8 +21,8 @@ ActiveRecord::Schema.define(version: 20140908022450) do
   end
 
   create_table "concerts", force: true do |t|
-    t.string   "name"
-    t.string   "program"
+    t.text     "name"
+    t.text     "program"
     t.string   "stage"
     t.integer  "year"
     t.integer  "month"

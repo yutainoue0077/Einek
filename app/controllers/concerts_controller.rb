@@ -21,38 +21,55 @@ class ConcertsController < ApplicationController
     show_year  = page_month[0]
     show_month = page_month[1]
 
-    @concerts = Concert.where(month: show_month, year: show_year)
+    @concerts = Concert.where(month: show_month).where(year: show_year)
   end
 
 
   def new
-
     #表示する月を選ぶ
-    @access = Access.find(1)
-    xxx = @access.spot
-    @concerts = Concert.where(month: xxx)
-    month_name = xxx
+    @concerts = Concert.where(year: params[:year], month: params[:month])
+    month_name = params[:month]
+    year_name = params[:year]
 
     #excelファイルを作成
     Spreadsheet.client_encoding = "UTF-8"
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
 
+
+
     #演奏会情報を入力していく
     @concerts.each_with_index do |concert, i|
+
+      #配列で保存していた名前を連結する
+      name_join = ""
+      concert.name.each do |name|
+        name_join = name_join + name
+      end
+
+      program_join = ""
+      concert.program.each do |program|
+        program_join = program_join + program
+      end
+
+      content_join = ""
+      concert.content.each do |content|
+        content_join = content_join + content
+      end
+
       i = i * 8
       sheet1[i, 0] = '演奏会名'
-      sheet1[i, 1] = concert.name
+      sheet1[i, 1] = name_join
       sheet1[i + 1, 0] = '日程'
-      sheet1[i + 1, 1] = concert.program
+      sheet1[i + 1, 1] = program_join
       sheet1[i + 2, 0] = '会場'
       sheet1[i + 2, 1] = concert.stage
       sheet1[i + 3, 0] = '最寄り駅'
-      sheet1[i + 3, 1] = ''
+      sheet1[i + 3, 1] = concert.station
       sheet1[i + 4, 0] = '楽団HP'
       sheet1[i + 4, 1] = concert.information
-      sheet1[i + 5, 0] = '担当者'
-      sheet1[i + 5, 1] = '' #ユーザーの自由記入欄
+      sheet1[i + 5, 0] = '曲目'
+      sheet1[i + 5, 1] = content_join
       sheet1[i + 6, 0] = '備考'
       sheet1[i + 6, 1] = '' #ユーザーの自由記入欄
     end
@@ -63,7 +80,7 @@ class ConcertsController < ApplicationController
     send_data(
     data.string,
     :type => 'application/excel',
-    :filename => "【2014年#{month_name}月】挟み込みリスト" + '.xls'
+    :filename => "【#{year_name}年#{month_name}月】挟み込みリスト" + '.xls'
     )
   end
 

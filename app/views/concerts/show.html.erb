@@ -34,13 +34,6 @@
   </tr>
 </table>
 
-
-
-<% 31.times do |x_day| %>
-
-<% today_concert = Concert.where(day: x_day) %>
-<% next if today_concert.blank? %>
-<h1><%= x_day %>日</h1>
 <table class="table">
 
   <thead>
@@ -55,46 +48,51 @@
     </tr>
   </thead>
 
-  <tbody>
+  <% day_title = 0 %>
+  <% @concerts.each do |concert| %>
 
-    <% today_concert.each do |concert| %>
-      <tr>
-        <td>
-          <ul style="list-style:none;">
-            <% concert.name.each do |name_list| %>
-            <li><%= name_list %></li>
-            <% end %>
-          </ul>
-        </td>
-        <td>
-          <ul style="list-style:none;">
-            <% concert.program.each do |program_list| %>
-            <li><%= program_list %></li>
-            <% end %>
-          </ul>
-        </td>
-        <td><%= concert.stage %></td>
-        <td><%= concert.station %></td>
-        <td>
-          <% unless concert.information.empty? %>
-          <%= link_to '楽団HP',  concert.information, :target=>["_blank"] %>
+  <% unless concert.day == day_title %>
+  <% day_title = concert.day %>a
+      <tbody>
+      <td><h1><%= day_title %>日</h1></td>
+    </tbody>
+  <% end %>
+
+  <tbody>
+    <tr>
+      <td>
+        <ul style="list-style:none;">
+         <% concert.name.each do |name_list| %>
+          <li><%= name_list %></li>
+         <% end %>
+        </ul>
+      </td>
+      <td>
+        <ul style="list-style:none;">
+          <% concert.program.each do |program_list| %>
+           <li><%= program_list %></li>
           <% end %>
-        </td>
-        <td>
-          <ol>
-            <% concert.content.each do |concert_list| %>
-            <li><%= concert_list %></li>
-            <% end %>
-          </ol>
-        </td>
-        <td colspan="12"></td>
-      </tr>
-    <% end %>
+        </ul>
+      </td>
+      <td><%= concert.stage %></td>
+      <td><%= concert.station %></td>
+      <td>
+        <% unless concert.information.empty? %>
+          <%= link_to '楽団HP',  concert.information, :target=>["_blank"] %>
+        <% end %>
+      </td>
+      <td>
+        <ol>
+          <% concert.content.each do |content_list| %>
+            <li><%= content_list %></li>
+          <% end %>
+        </ol>
+      </td>
+      <td colspan="12"></td>
+    </tr>
   </tbody>
+  <% end %>
 </table>
 
-<% end %>
-
-<br>
 <p><%= link_to '戻る', concerts_path %></p>
-<p><%= link_to 'Excel出力', new_concert_path %></p>
+<p><%= link_to 'Excel出力', controller: "concerts", action: "new", month: 1, year: 2014 %></p>

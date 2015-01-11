@@ -11,10 +11,10 @@ namespace :scraping do
     #2014,2015をスクレイピング
     start_year = 2013
 
-    1.times do
+    2.times do
       start_year = start_year + 1
       #一年間（12ヶ月）全てをスクレイピングしたい
-      1.times do |x|
+      12.times do |x|
         month_now = x + 1
         #ｘを英語の月名に変換
         case month_now
