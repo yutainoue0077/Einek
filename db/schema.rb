@@ -15,24 +15,26 @@ ActiveRecord::Schema.define(version: 20140908022450) do
 
   create_table "accesses", force: true do |t|
     t.string   "hall_name"
-    t.integer  "spot"
-    t.string   "train"
+    t.string   "station"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "concerts", force: true do |t|
-    t.string   "name"
-    t.string   "program"
+    t.text     "name"
+    t.text     "program"
     t.string   "stage"
+    t.integer  "year"
     t.integer  "month"
+    t.integer  "day"
     t.string   "map"
     t.string   "address"
     t.string   "information"
     t.integer  "page_month"
+    t.string   "station"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "content"
+    t.text     "content"
   end
 
   create_table "infomations", force: true do |t|

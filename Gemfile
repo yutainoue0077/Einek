@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'https://tokyo-m.rubygems.org/'
 ruby '2.1.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -67,5 +67,28 @@ gem 'twitter-bootstrap-rails'
 gem 'execjs'
 gem "therubyracer"
 
+gem 'bootstrap-sass'
+
 # Excel出力
 gem 'spreadsheet'
+
+# peek関連
+gem 'peek'
+gem 'peek-git'
+# gem 'peek-mysql2'
+gem 'peek-performance_bar'
+gem 'peek-rblineprof'
+gem 'pygments.rb', require: false # peek-rblineprof の syntax を highlight
+
+group :development do
+  # 高機能コンソール
+  gem 'pry-rails'
+
+  # デバッガー
+  gem 'pry-byebug'
+  gem 'pry-stack_explorer'
+
+  # PryでのSQLの結果を綺麗に表示
+  gem 'hirb'
+  gem 'hirb-unicode'
+end
